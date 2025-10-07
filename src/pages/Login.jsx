@@ -1,8 +1,7 @@
-import "../css/Login.css"
+import "../css/Login.css";
 
 function Login() {
     return (
-        <div className="login">
         <div className="login">
             <h2>Login</h2>
             <form>
