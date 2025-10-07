@@ -1,22 +1,49 @@
 // src/components/Navigation.jsx
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../css/nav.css"
-
+import *as FaIcons  from "react-icons/fa";
+import *as AiIcons  from "react-icons/ai";
+import { SidebarData } from './SidebarData'
+import { IconContext } from 'react-icons';
 function Navigation() {
+    const [sidebar, setSidebar] = useState(false);
+
+    const showSidebar = () => setSidebar(!sidebar);
     return (
-        <nav className="navbar">
-            <div className="navbar-links">
-                <Link to="/" className="nav-link">Home</Link>
-                <Link to="/login" className="nav-link">Login</Link>
-                <Link to="/register" className="nav-link">Register</Link>
-                <Link to="/dashboard" className="nav-link">Dashboard</Link>
-                <Link to="/create" className="nav-link">Create Flashcard</Link>
-                <Link to="/my" className="nav-link">My Flashcards</Link>
-                <Link to="/review" className="nav-link">Review Mode</Link>
-                <Link to="/not_memorized" className="nav-link">Not Memorized</Link>
-                <Link to="/about" className="nav-link">About</Link>
+        <> 
+        <IconContext.Provider value={{color: 'white'}}>
+            <div className='navbar'>
+            <Link to="#" className='menu-bars'>
+                <FaIcons.FaBars onClick={showSidebar}/>
+            </Link>
             </div>
-        </nav>
+            <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
+                <ul className='nav-menu-items' onClick={showSidebar}>
+                    <li className='navbar-toggle'>
+                        <Link to="#" className='menu-bars'>
+                        <AiIcons.AiOutlineClose />
+                        </Link>
+                    </li>
+                    {SidebarData.map((item,index) =>
+                    {
+                        return (
+                            <li key={index} className={item.cName}>
+                                <Link to={item.path}>
+                                    {item.icon}
+                                    <span>{item.title}</span>
+                                </Link>
+                            </li>
+                        )
+                    }
+                    )}
+                </ul>
+            </nav>
+            </IconContext.Provider>
+        </>
+
+
+
     );
 }
 

@@ -1,10 +1,11 @@
+
 .btn-link {
     background-color: #042632;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
-    text-decoration: none;      /* removes underline */
+    text-decoration: none;      /* removes underline*/ 
     font-weight: 600;
     font-size: 16px;
     cursor: pointer;
@@ -22,11 +23,14 @@
 
 }
 
+
 .home{
-    background-color: #02232b;
+    display: flex;
     padding: 10px 20px;
-    text-align: center;
+    align-items: center;
     border: 1px solid #e0e0e0;
     justify-content: center; /* centers horizontally */
-    margin-top: 20px;        /* optional spacing */
+      /* optional spacing */
+    height: 90vh;
+    font-size: 2rem;
 }

@@ -15,7 +15,7 @@ import "../src/css/App.css"
 function App() {
     return (
         <>
-            <Header/> {/* Header visible on all pages */}
+            <Header /> {/* Header visible on all pages */}
             <Navigation /> {/* Navigation links visible on all pages */}
             <main className="app-container">
                 <Routes>

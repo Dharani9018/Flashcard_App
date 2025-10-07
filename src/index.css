@@ -59,6 +59,7 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+  
   a:hover {
     color: #747bff;
   }
@@ -66,3 +67,15 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 48px 24px;
+  max-width: 720px;
+  margin: auto;
+  align-content: flex-end;
+}
+
