@@ -7,11 +7,8 @@ import FlashcardDemo from "../components/FlashcardDemo.jsx";
 function Home() {
     return (
         <div className="home">
-
-            <h1>Create flashcards⚡ Learn faster☄️</h1>
-            <br></br>
-            <h5>Make your own flashcards and boost your learning efficiency!</h5>
-            <br></br>
+            <p className="title">⚔️ The ultimate study weapon ⚔️</p>
+            <p className="info">A better way to study with flashcards is here. Creating your own set of flashcards is simple with our free flashcard maker — just add a term and definition.</p>
 
         <div>
             <FlashcardDemo/>
@@ -20,7 +17,8 @@ function Home() {
 
             <div className="wrapper">
             <div className="btn">
-                <p>Sign up now to make your own!!</p>
+                <p>Boost your learning efficiency⚡</p>
+                <p>Sign up now to make your own 🗃️</p>
                 <br></br>
             <div className="btn-container">
             <Link to='/register' className="btn-link">Get started</Link>

@@ -11,6 +11,7 @@ function FlashcardDemo({ question = "How does this site help?", answer = "A web-
     };
 
     return (
+        <div className="idk">
         <div className="flashcard-demo">
             <h2>Check out how it looks!!</h2>
         <div className="flashcard-container">
@@ -27,6 +28,7 @@ function FlashcardDemo({ question = "How does this site help?", answer = "A web-
         </div>
             <ReviewCard/>
         </div>
+            </div>
             </div>
     );
 }

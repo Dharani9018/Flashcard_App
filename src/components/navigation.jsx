@@ -6,6 +6,7 @@ import *as FaIcons  from "react-icons/fa";
 import *as AiIcons  from "react-icons/ai";
 import { SidebarData } from './SidebarData'
 import { IconContext } from 'react-icons';
+
 function Navigation() {
     const [sidebar, setSidebar] = useState(false);
 
@@ -17,6 +18,9 @@ function Navigation() {
             <Link to="#" className='menu-bars'>
                 <FaIcons.FaBars onClick={showSidebar}/>
             </Link>
+                <div className="title-nav">
+                    <h2>CREATE FLASHCARDS ☄️ LEARN FASTER!! ⛹️</h2>
+                </div>
             </div>
             <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
                 <ul className='nav-menu-items' onClick={showSidebar}>

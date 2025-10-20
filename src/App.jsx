@@ -19,7 +19,6 @@ function App() {
         <>
             <Header /> {/* Header visible on all pages */}
             <Navigation /> {/* Navigation links visible on all pages */}
-
             <main className="app-container">
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -33,7 +32,6 @@ function App() {
                     <Route path="/about" element={<About/>} />
                 </Routes>
             </main>
-
         </>
     );
 }
