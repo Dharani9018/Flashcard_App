@@ -1,6 +1,16 @@
 .header{
+    font-size: 2rem;
     background-color: #f4f5f5;
     padding: 10px 20px;
     text-align: center;
     border: 1px solid #e0e0e0;
+}
+h1{
+    color: #333;
+    text-align: center;
+}
+
+.logo{
+    height: 50px;
+    width: 50px;
 }
