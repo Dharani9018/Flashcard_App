@@ -1,10 +1,13 @@
-/*
+.title-nav{
+    margin-left: 290px;
+    font-size: 25px;
+}
 .navbar {
     background-color: #f4f6f7;
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
-    align-items: left;
+
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -44,11 +47,14 @@
         padding: 0.5rem;
     }
 }
-*/
+
+h2{
+    color: #5c779a;
+}
 
 .navbar
 {
-    background-color: #060b26;
+    background-color: #042632;
     height: 80px;
     display: flex;
     justify-content: start;

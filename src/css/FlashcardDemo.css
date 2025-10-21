@@ -3,6 +3,7 @@
     padding: 20px;
     height: 75vh;
     border-radius: 50px;
+
 }
 
 .flashcard-container {
@@ -86,4 +87,11 @@ h4{
 
 .card-back:hover {
     box-shadow: 16px 16px 16px rgb(3, 16, 19);
+}
+
+.idk{
+    display: flex;
+    justify-content: center;  /* horizontal center */
+    align-items: center;      /* vertical alignment if needed */
+    width: 100%;
 }
