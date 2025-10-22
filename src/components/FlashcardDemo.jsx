@@ -11,8 +11,7 @@ function FlashcardDemo({
     return (
         <div className="flashcard-demo-container">
             <div className="flashcard-demo">
-                <h3>Check out how it looks!!</h3>
-               
+                <h3>Check out how it looks!!</h3> 
                 
                 <div className="flashcard-container">
                     <div 
