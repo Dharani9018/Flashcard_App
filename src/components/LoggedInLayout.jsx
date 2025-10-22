@@ -7,7 +7,7 @@ function LoggedInLayout() {
         <div className="logged-in-layout">
             <Navigation />
             <main className="main-content">
-                <Outlet /> {/* This renders the nested routes */}
+                <Outlet /> 
             </main>
         </div>
     );

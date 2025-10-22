@@ -64,7 +64,7 @@ h4 {
     background: none;
 }
 
-/* REMOVED the shadow pseudo-element */
+
 .card.flipped .card-inner {
     transform: rotateY(180deg);
 }
@@ -83,16 +83,16 @@ h4 {
     font-size: 1.3rem;
     font-weight: 500;
     padding: 30px;
-    /* REMOVED box-shadow */
+
     transition: all 0.3s ease;
 }
 
-/* Front card using theme colors */
+
 .card-front {
     background: var(--card-front);
 }
 
-/* Back card using theme colors */
+
 .card-back {
     background: var(--card-back);
     transform: rotateY(180deg);
@@ -101,16 +101,14 @@ h4 {
     color: var(--card-front-text);
 }
 
-/* Change answer text color (back of card) */
+
 .card-back p {
     color: var(--card-back-text);
 }
 
 
 
-/* REMOVED all shadow-related dark theme rules */
 
-/* Hover effects without shadow */
 .card:hover .card-inner {
     transform: scale(1.02);
 }
@@ -119,7 +117,7 @@ h4 {
     transform: rotateY(180deg) scale(1.02);
 }
 
-/* Responsive design */
+
 @media (max-width: 768px) {
     .flashcard-container {
         flex-direction: column;

@@ -12,7 +12,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Floating flashcard background */
+
 .register-bg {
   position: absolute;
   width: 100%;
@@ -50,7 +50,7 @@
   }
 }
 
-/* Registration form card */
+
 .register-card {
   z-index: 2;
   background: rgba(255, 255, 255, 0.08);
@@ -111,7 +111,7 @@
   transform: translateY(-3px);
 }
 
-/* Back to Login */
+
 .login-redirect {
   margin-top: 15px;
   font-size: 0.9rem;

@@ -1,7 +1,7 @@
 :root {
     --background: radial-gradient(circle at center, #fbe4e6 0%, #f3d9f4 50%, #f5f0e6 100%);
     
-    /* Light theme text colors */
+    
     --text-primary: #5d4037;
     --text-secondary: #7e57c2;
     --text-accent: #e91e63;
@@ -20,7 +20,6 @@
 [data-theme="dark"] {
     --background: radial-gradient(circle at center, #4a235a 0%, #2c3e50 50%, #1b2631 100%);
     
-    /* Dark theme text colors */
     --text-primary: #e8e6e3;
     --text-secondary: #bb86fc;
     --text-accent: #03dac6;

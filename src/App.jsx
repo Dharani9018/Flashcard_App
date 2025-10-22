@@ -39,13 +39,13 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/about" element={<About />} />
                     
-                    {/* Protected routes wrapper - applies to all nested routes */}
+                    
                     <Route path="/login/home" element={
                         <ProtectedRoute isLoggedIn={isLoggedIn}>
                             <LoggedInLayout />
                         </ProtectedRoute>
                     }>
-                        {/* These routes automatically get the Layout */}
+                        
                         <Route index element={<Home />} />
                         <Route path="my" element={<MyFlashcards />} />
                         <Route path="review" element={<ReviewMode />} />
