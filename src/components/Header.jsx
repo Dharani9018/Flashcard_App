@@ -1,28 +1,26 @@
 import "../css/Header.css";
-import logo from "../assets/images/card.png"; // This is your icon
+ // This is your icon
+import { TbCards } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import { IconContext } from 'react-icons';
 
-function Header() {
+function Header({ handleChange,icon: Icon,color1,color2 }) {
     return (
         <div className="header">
             <h1>
-                {/* This Link component now wraps BOTH the
-                  image and the text to make them one clickable unit.
-                */}
                 <Link className="logo-flash" to="/">
-                    <img
-                        className="logo"
-                        src={logo}
-                        alt="Flashcard Maker home"
-                    />
-                    {/* It's better to put the text in a <span>
-                      so it's grouped with the image inside the link.
-                    */}
+                <IconContext.Provider value={{color:color2}}>
+                    <TbCards />
+                </IconContext.Provider>
+                
                 </Link>
-                <span>FLASHCARD MAKER</span>
             </h1>
+            <div className="toggle-container">
+                <IconContext.Provider value={{color: color1}}> 
+                    <Icon className="theme-icon" onClick={handleChange}/>
+                </IconContext.Provider>
+            </div>
         </div>
     );
 }
-
 export default Header;

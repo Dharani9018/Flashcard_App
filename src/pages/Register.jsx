@@ -1,17 +1,105 @@
-import "../css/Register.css"
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
+import "../css/Register.css";
+
+const NUM_CARDS = 25;
 
 function Register() {
-    return (
-        <div className="register">
-            <h2>Register</h2>
-            <form>
-                <input type="text" placeholder="Name" /><br />
-                <input type="email" placeholder="Email" /><br />
-                <input type="password" placeholder="Password" /><br />
-                <button>Register</button>
-            </form>
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const colors = ["#34d399", "#f472b6", "#60a5fa", "#facc15", "#a78bfa"];
+
+  const renderFlashcards = () =>
+    Array.from({ length: NUM_CARDS }, (_, i) => {
+      const left = Math.random() * 100 + "%";
+      const top = Math.random() * 100 + "%";
+      const duration = 18 + Math.random() * 10 + "s";
+      const delay = Math.random() * 5 + "s";
+      const rotateX = Math.random() * 360;
+      const rotateY = Math.random() * 360;
+      const depth = Math.random() * 200 - 100;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      return (
+        <div
+          key={i}
+          className="floating-card"
+          style={{
+            left,
+            top,
+            animationDuration: duration,
+            animationDelay: delay,
+            transform: `translateZ(${depth}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+            "--card-color": color,
+          }}
+        >
+          <div className="card-front">Q??</div>
+          <div className="card-back">A</div>
         </div>
-    );
+      );
+    });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Registered:", formData);
+    navigate("/login"); // ✅ redirect back to login after registration
+  };
+
+  return (
+    <div className="register-page-container">
+      <div className="register-bg">{renderFlashcards()}</div>
+
+      <motion.div
+        className="register-card"
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <h2>Create Account</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Register</button>
+        </form>
+
+        <p className="login-redirect">
+          Already have an account?
+          <Link to="/login" className="login-link">
+            Log in
+          </Link>
+        </p>
+      </motion.div>
+    </div>
+  );
 }
 
 export default Register;

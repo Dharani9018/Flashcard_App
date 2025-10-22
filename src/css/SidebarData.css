@@ -1,3 +1,4 @@
+@import url('../Variables.css');
 .SidebarData{
-    background-color: #042632;
+    background-color: var(--side-bar);
 }

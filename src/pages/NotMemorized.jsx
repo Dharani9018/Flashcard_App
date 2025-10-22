@@ -1,3 +1,4 @@
+import "../css/NotMemorized.css"
 function NotMemorized() {
     return (
         <div className="not_memorized">

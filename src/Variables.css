@@ -1,0 +1,37 @@
+:root {
+    --background: radial-gradient(circle at center, #fbe4e6 0%, #f3d9f4 50%, #f5f0e6 100%);
+    
+    /* Light theme text colors */
+    --text-primary: #5d4037;
+    --text-secondary: #7e57c2;
+    --text-accent: #e91e63;
+    --text-muted: #8d6e63;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --side-bar:linear-gradient(135deg, #f8bbd0 0%, #e1bee7 50%, #d1c4e9 100%);
+    --card-front:linear-gradient(135deg, #f48fb1 0%, #ce93d8 50%, #b39ddb 100%);
+    --card-back: linear-gradient(135deg, #7e57c2 0%, #5e35b1 50%, #3949ab 100%);
+    --card-front-text: black;
+    --card-back-text:#ffffff;
+    --button-text:white;
+    --button-bg:linear-gradient(135deg, #f8bbd0 0%, #e1bee7 50%, #d1c4e9 100%);
+}
+
+[data-theme="dark"] {
+    --background: radial-gradient(circle at center, #4a235a 0%, #2c3e50 50%, #1b2631 100%);
+    
+    /* Dark theme text colors */
+    --text-primary: #e8e6e3;
+    --text-secondary: #bb86fc;
+    --text-accent: #03dac6;
+    --text-muted: #b0b0b0;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --side-bar:linear-gradient(135deg, #6a1b9a 0%, #4527a0 50%, #283593 100%);
+    --card-front: linear-gradient(135deg, #4a235a 0%, #35276e 50%, #1a237e 100%);
+    --card-back: linear-gradient(135deg, #1b2631 0%, #0d1b2a 50%, #000814 100%);    --card-back-text:#ffffff;
+    --card-front-text:#ffffff;
+    --card-back-text:#ffffff;
+    --button-text:black;
+    --button-bg:linear-gradient(135deg, #6a1b9a 0%, #4527a0 50%, #283593 100%); 
+}

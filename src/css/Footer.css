@@ -1,0 +1,42 @@
+@import url('../Variables.css');
+.footer {
+  background:none;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   border-top: 1px solid; /* Added proper border */
+    border-color: var(--text-muted); /* Use your theme color */
+}
+
+.footer-container {
+  background:none;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-links {
+  background:none;
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.footer-link {
+  color: #171717;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #00bcd4;
+}
+
+.footer-credit {
+  background:none;
+  font-size: 14px;
+  opacity: 0.7;
+}

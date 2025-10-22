@@ -1,41 +1,171 @@
-.login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 80vh;
-    font-family: Arial, sans-serif;
+/* Colorful 3D Flashcard Background Login Page */
+
+.login-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #05091e, #0f172a 70%);
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
 }
 
-.login h2 {
-    margin-bottom: 20px;
-    color: #333;
+/* Floating colorful flashcards */
+.enhanced-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  perspective: 1000px;
 }
 
-.login form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 250px;
+.floating-card {
+  position: absolute;
+  width: 100px;
+  height: 65px;
+  transform-style: preserve-3d;
+  animation: floatInSpace linear infinite;
+  cursor: default;
 }
 
-.login input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.floating-card .card-front,
+.floating-card .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--card-color) 40%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--card-color);
+  background: color-mix(in srgb, var(--card-color) 10%, transparent);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--card-color) 25%, transparent);
+  transition: background 0.3s;
 }
 
-.login button {
-    padding: 10px;
-    background-color: #022047;
-    border: 5px solid white;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
+.floating-card .card-back {
+  transform: rotateY(180deg);
+  background: color-mix(in srgb, var(--card-color) 25%, #05091e);
+  color: white;
 }
 
-.login button:hover {
-    background-color: #010f1e;
-    color: wheat;
-    border: 5px dotted white;
+@keyframes floatInSpace {
+  0% {
+    transform: translate3d(0, 120vh, 0) rotateX(0deg) rotateY(0deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate3d(20vw, 0, 60px) rotateX(180deg) rotateY(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translate3d(-15vw, -50vh, -80px) rotateX(270deg) rotateY(360deg);
+  }
+  100% {
+    transform: translate3d(0, -120vh, 0) rotateX(360deg) rotateY(720deg);
+    opacity: 0;
+  }
+}
+
+/* Login Card */
+.login-card {
+  background-color: rgba(5, 9, 30, 0.9);
+  padding: 2.5rem;
+  max-width: 28rem;
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6),
+              0 0 15px rgba(34, 211, 238, 0.15);
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 25px 50px rgba(34, 211, 238, 0.25);
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border: 1px solid #181a1b;
+  border-radius: 0.5rem;
+  background-color: #181a1b;
+  color: white;
+  transition: 0.2s;
+}
+
+.input-field:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+  outline: none;
+}
+
+.submit-button {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  font-weight: 600;
+  color: white;
+  background-color: #05091e;
+  border-radius: 0.5rem;
+  border: 2px solid #4b5563;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #1f2937;
+  color: #22d3ee;
+  border-color: #22d3ee;
+  transform: translateY(-2px);
+}
+
+.signup-text {
+  text-align: center;
+  margin-top: 2rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.signup-link {
+  color: #22d3ee;
+  margin-left: 4px;
+  text-decoration: none;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
 }
