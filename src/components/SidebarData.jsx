@@ -32,7 +32,7 @@ export const SidebarData = [
 
     {
         title: 'About',
-        path: '/About',
+        path: '/demo',
         icon: <AiIcons.AiFillInfoCircle />,
         cName: 'nav-text'
     },

@@ -15,6 +15,7 @@ const Footer = () => {
           >
             GitHub
           </a>
+          <a href="/" className="footer-link">About</a>
         </div>
         <div className="footer-credit">
           <p>© {new Date().getFullYear()} Flashcard App. All rights reserved.</p>

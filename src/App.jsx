@@ -6,7 +6,6 @@ import Demo from "./pages/Demo.jsx";
 import MyFlashcards from "./pages/MyFlashcards.jsx";
 import ReviewMode from "./pages/reviewMode.jsx";
 import NotMemorized from "./pages/NotMemorized.jsx";
-import About from "./pages/About.jsx";
 import "../src/css/App.css"
 import Footer from "./components/Footer.jsx";
 import {useState} from "react";
@@ -37,7 +36,6 @@ function App() {
                         <Login onLoginSuccess={() => setIsLoggedIn(true)} />
                     } />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/about" element={<About />} />
                     
                     
                     <Route path="/login/home" element={

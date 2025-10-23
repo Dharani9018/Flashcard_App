@@ -3,7 +3,6 @@ import "../css/Header.css";
 import { TbCards } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { IconContext } from 'react-icons';
-
 function Header({ handleChange,icon: Icon,color1,color2 }) {
     return (
         <div className="header">

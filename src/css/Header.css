@@ -6,9 +6,9 @@
     align-items: center;
     padding: 1rem 1rem;
     background: none;
-    border-bottom: 1px solid; /* Added proper border */
-    border-color: var(--text-muted); /* Use your theme color */
-    opacity: 0.8; /* Optional: subtle border */
+    border-bottom: 1px solid; 
+    border-color: var(--text-muted); 
+    opacity: 0.8;
 }
 .logo-flash svg {   
     fill: pink;

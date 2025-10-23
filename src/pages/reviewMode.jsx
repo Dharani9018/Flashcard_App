@@ -1,3 +1,4 @@
+import "../css/reviewMode.css"
 function ReviewMode() {
     return (
         <div className="review">
