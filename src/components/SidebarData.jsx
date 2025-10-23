@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import * as AiIcons  from "react-icons/ai";
 import { MdQuiz } from "react-icons/md";
 import { MdOutlinePendingActions } from "react-icons/md";
@@ -6,26 +6,26 @@ import { MdOutlinePendingActions } from "react-icons/md";
 export const SidebarData = [
     {
         title: 'Home',
-        path: '/',
+        path: '/login/home',
         icon: <AiIcons.AiFillHome />,
         cName: 'nav-text'
     },
     {
         title: 'My Flash Cards',
-        path: '/my',
+        path: '/login/home/my',
         icon: <AiIcons.AiFillFolder />,
         cName: 'nav-text'
     },
     {
         title: 'Not Memorized',
-        path: '/not_memorized',
+        path: '/login/home/not_memorized',
         icon: <MdOutlinePendingActions />,
         cName: 'nav-text'
     },
 
     {
         title: 'Review',
-        path: '/review',
+        path: '/login/home/review',
         icon: <MdQuiz />,
         cName: 'nav-text'
     },
@@ -39,7 +39,7 @@ export const SidebarData = [
 
     {
         title: 'Settings',
-        path: '/',
+        path: '/login/home',
         icon: <AiIcons.AiFillSetting />,
         cName: 'nav-text'
     }

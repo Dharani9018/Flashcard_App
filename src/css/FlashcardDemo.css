@@ -1,39 +1,56 @@
-.flashcard-demo {
-    background: linear-gradient(160deg, #0575E6, #00F260);
-    padding: 20px;
-    height: 75vh;
-    border-radius: 50px;
+@import url("../Variables.css");
+.flashcard-demo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background: none;
+}
 
+.flashcard-demo {
+    background: none;
+    padding: 40px 20px;
+    border-radius: 50px;
+    width: 100%;
+    max-width: 1200px;
 }
 
 .flashcard-container {
-    /* This is the key change */
+    background: none;
     display: flex;
-    /* These are optional but recommended for good spacing */
-    justify-content: center; /* Horizontally centers the two cards */
-    align-items: center;     /* Vertically aligns them if they are different heights */
-    gap: 20px;               /* Adds a 20px space between the two cards */
-    padding: 20px;           /* Adds some space around the container */
-    flex-wrap: wrap;         /* Allows them to stack on very small screens */
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+    flex-wrap: wrap;
 }
 
-h2{
-    color: #fff;
+h3 {
+    font-family: "Times New Roman", Times, serif;
     text-align: center;
-    margin-bottom: 10px;
+    font-weight: 300;
+    color: var(--text-primary);
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: none;
 }
 
-h4{
-    color: #fff;
+h4 {
+    color: var(--text-primary);
     text-align: center;
     margin-top: 10px;
+    font-size: 1.2rem;
+    font-weight: 400;
 }
+
 .card {
     width: 500px;
     height: 300px;
-    perspective: 1000px;
+    perspective: 1200px;
     border-radius: 25px;
     cursor: pointer;
+    position: relative;
+    background: none;
 }
 
 .card-inner {
@@ -42,16 +59,14 @@ h4{
     position: relative;
     text-align: center;
     transform-style: preserve-3d;
-    transition: transform 0.999s;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-radius: 25px;
+    background: none;
 }
 
-.card-inner:hover {
-    box-shadow: 30px 30px 30px 1px rgba(3, 16, 19, 0.5);
-}
 
-/* Flip when the 'flipped' class is added */
 .card.flipped .card-inner {
-    transform: rotateX(180deg);
+    transform: rotateY(180deg);
 }
 
 .card-front,
@@ -60,38 +75,84 @@ h4{
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
-    border-radius: 10px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 20px;
+    font-size: 1.3rem;
     font-weight: 500;
-    padding: 20px;
+    padding: 30px;
+
+    transition: all 0.3s ease;
 }
+
 
 .card-front {
-    background: linear-gradient(180deg, #174a55, #000);
-    color: #fff;
-    transform: rotateX(0deg);
-    border: 5px solid rgb(0, 12, 14);
+    background: var(--card-front);
 }
-.card-front:hover {
-    box-shadow: 16px 16px 16px black;
-}
+
+
 .card-back {
-    background: linear-gradient(180deg, #174a55, #000 );
-    color: #fff;
-    transform: rotateX(180deg);
+    background: var(--card-back);
+    transform: rotateY(180deg);
+}
+.card-front p {
+    color: var(--card-front-text);
 }
 
-.card-back:hover {
-    box-shadow: 16px 16px 16px rgb(3, 16, 19);
+
+.card-back p {
+    color: var(--card-back-text);
 }
 
-.idk{
-    display: flex;
-    justify-content: center;  /* horizontal center */
-    align-items: center;      /* vertical alignment if needed */
-    width: 100%;
+
+
+
+.card:hover .card-inner {
+    transform: scale(1.02);
+}
+
+.card.flipped:hover .card-inner {
+    transform: rotateY(180deg) scale(1.02);
+}
+
+
+@media (max-width: 768px) {
+    .flashcard-container {
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px;
+        background: none;
+    }
+    
+    h3 {
+        font-size: 2.5rem;
+    }
+    
+    .card {
+        width: 350px;
+        height: 250px;
+    }
+    
+    .card-front,
+    .card-back {
+        font-size: 1.1rem;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    h3 {
+        font-size: 2rem;
+    }
+    
+    .card {
+        width: 300px;
+        height: 200px;
+    }
+    
+    .flashcard-demo {
+        padding: 20px 10px;
+    }
 }

@@ -1,6 +1,8 @@
 .container {
     text-align: center;
     padding: 2rem;
+    height: 90vh;
+    background: none;
 }
 
 .add-flashcard {
@@ -20,6 +22,7 @@
 }
 
 .card-list-container {
+    background: none;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -152,6 +155,7 @@
     background-color: #4f46e5;
     color: white;
     cursor: pointer;
+    background: none;
 }
 
 .add-card{
@@ -159,6 +163,7 @@
     justify-content: center;  /* horizontal center */
     align-items: center;      /* vertical alignment if needed */
     width: 100%;
+    background: none;
 }
 
 .btns button{

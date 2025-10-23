@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "../css/ReviewCard.css";
 
-function ReviewCard({ question="is life worth living tho", answer="nope not at all lorem " }) {
+function ReviewCard({ question = "is life worth living tho", answer = "nope not at all lorem" }) {
     const [flipped, setFlipped] = useState(false);
     const [userAnswer, setUserAnswer] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setFlipped(true); // flip to reveal answer
+        setFlipped(true);
     };
 
     const handleReset = () => {
@@ -18,21 +18,22 @@ function ReviewCard({ question="is life worth living tho", answer="nope not at a
     return (
         <div className="review-container">
             <div className={`Rev-card ${flipped ? "flipped" : ""}`}>
-                <h4>Submit to check the answer ✅</h4>
+                
                 <div className="inner">
                     {/* FRONT: Question with text area */}
                     <div className="front">
-                        <div>
+                        <div className="card-content">
                             <p className="question">{question}</p>
                             <form onSubmit={handleSubmit}>
-                <textarea
-                    className="answer-input"
-                    value={userAnswer}
-                    onChange={(e) => setUserAnswer(e.target.value)}
-                    placeholder="Type your answer..."
-                />
+                                <textarea
+                                    className="answer-input"
+                                    value={userAnswer}
+                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                    placeholder="Type your answer..."
+                                    rows="3"
+                                />
                                 <button type="submit" className="submit-btn">
-                                    Submit
+                                    Submit Answer
                                 </button>
                             </form>
                         </div>
@@ -40,11 +41,13 @@ function ReviewCard({ question="is life worth living tho", answer="nope not at a
 
                     {/* BACK: Shows correct answer */}
                     <div className="back">
-                        <div>
+                        <div className="card-content">
+                            <p className="answer-label">Your Answer:</p>
+                            <p className="user-answer">"{userAnswer}"</p>
                             <p className="answer-label">Correct Answer:</p>
                             <p className="answer-text">{answer}</p>
                             <button onClick={handleReset} className="back-btn">
-                                Try Again
+                                Try Another
                             </button>
                         </div>
                     </div>
