@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/myFlashcards.css";
-import "../css/nav.css"
+import "../css/nav.css";
 
 function MyFlashcards() {
   const [question, setQuestion] = useState("");
@@ -14,44 +14,33 @@ function MyFlashcards() {
 
   useEffect(() => {
     const checkSidebar = () => {
-      const sidebar = document.querySelector('.nav-menu');
-      const isActive = sidebar && sidebar.classList.contains('active');
+      const sidebar = document.querySelector(".nav-menu");
+      const isActive = sidebar && sidebar.classList.contains("active");
       setSidebarActive(isActive);
     };
 
-    
     checkSidebar();
-
-    
     const interval = setInterval(checkSidebar, 100);
-    
-    
-    const menuBars = document.querySelector('.menu-bars');
-    if (menuBars) {
-      menuBars.addEventListener('click', checkSidebar);
-    }
+    const menuBars = document.querySelector(".menu-bars");
+    if (menuBars) menuBars.addEventListener("click", checkSidebar);
 
     return () => {
       clearInterval(interval);
-      if (menuBars) {
-        menuBars.removeEventListener('click', checkSidebar);
-      }
+      if (menuBars) menuBars.removeEventListener("click", checkSidebar);
     };
   }, []);
 
-  
   useEffect(() => {
-    const savedFlashcards = localStorage.getItem("flashcards")
-    if(savedFlashcards) {
-      setFlashcards(JSON.parse(savedFlashcards))
+    const savedFlashcards = localStorage.getItem("flashcards");
+    if (savedFlashcards) {
+      setFlashcards(JSON.parse(savedFlashcards));
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem("flashcards", JSON.stringify(flashcards))
-  }, [flashcards])
+    localStorage.setItem("flashcards", JSON.stringify(flashcards));
+  }, [flashcards]);
 
-  
   const handleAddClick = () => {
     setShowForm(true);
     setQuestion("");
@@ -101,11 +90,17 @@ function MyFlashcards() {
   };
 
   const toggleFlip = (index) => {
-    setFlippedIndex(flippedIndex === index ? null : index);
+    if (flippedIndex === index) {
+      setFlippedIndex(null);
+    } else {
+      // Smooth transition: wait a moment before flipping the next
+      setFlippedIndex(null);
+      setTimeout(() => setFlippedIndex(index), 150);
+    }
   };
 
   return (
-    <div className={`container ${sidebarActive ? 'sidebar-active' : ''}`}>
+    <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
       {!showForm ? (
         <>
           <button className="add-flashcard" onClick={handleAddClick}>
