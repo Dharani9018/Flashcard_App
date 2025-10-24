@@ -6,7 +6,6 @@
     align-items: center;
     padding: 1rem 1rem;
     background: none;
-    border-bottom: 1px solid; 
     border-color: var(--text-muted); 
     opacity: 0.8;
 }
