@@ -82,9 +82,9 @@ const Login = ({ onLoginSuccess }) => {
           <div className="input-group">
             <i className="fa fa-user input-icon"></i>
             <input
-              type="email"
+              type="text"
               name="username"
-              placeholder="Enter your email"
+              placeholder="Enter Username or Email"
               value={formData.username}
               onChange={handleChange}
               className="input-field"
