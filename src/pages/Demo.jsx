@@ -5,10 +5,9 @@ import FlashcardDemo from "../components/FlashcardDemo.jsx";
 function Demo() {
     return (
         <div className="demo-container">
-            <h2>flashcard maker</h2>
+            <h2>Flashcard Maker</h2>
             <p className="title">⚔️ The ultimate study weapon ⚔️</p>
             <p className="info">A better way to study with flashcards is here. Creating your own set of flashcards is simple with our free flashcard maker.</p>
-            
             <div className="demo">
                 <div className="demo-bg">
                     <FlashcardDemo/>
