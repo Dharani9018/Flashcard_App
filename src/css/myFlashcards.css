@@ -90,7 +90,7 @@
 }
 
 .flip-card.flipped .flip-card-inner {
-    transform: rotateY(180deg);
+    transform: rotateX(180deg);
 }
 
 .flip-card-front,
@@ -123,7 +123,7 @@
 /* --- BACK SIDE --- */
 .flip-card-back {
     background: var(--card-back);
-    transform: rotateY(180deg);
+    transform: rotateX(180deg);
 }
 
 .flip-card-back:hover {
