@@ -40,7 +40,9 @@ function App() {
                     
                     <Route path="/login/home" element={
                         <ProtectedRoute isLoggedIn={isLoggedIn}>
-                            <LoggedInLayout />
+                            <LoggedInLayout 
+                                iconcolor={isDark ? "white" : "black"} 
+                           />
                         </ProtectedRoute>
                     }>
                         

@@ -8,13 +8,14 @@ import *as AiIcons  from "react-icons/ai";
 import { SidebarData } from './SidebarData'
 import { IconContext } from 'react-icons';
 
-function Navigation() {
+
+function Navigation({iconcolor}) {
     const [sidebar, setSidebar] = useState(false);
 
     const showSidebar = () => setSidebar(!sidebar);
     return (
         <> 
-        <IconContext.Provider value={{color: 'white'}}>
+        <IconContext.Provider value={{ color :iconcolor }}>
             <div className='navbar'>
             <Link to="#" className='menu-bars'>
                 <FaIcons.FaBars onClick={showSidebar}/>

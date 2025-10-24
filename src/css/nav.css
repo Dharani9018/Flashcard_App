@@ -2,13 +2,13 @@
 .title-nav{
     margin-left: 290px;
     font-size: 25px;
+    color:var(--text-primary);
 }
 .navbar {
     background: none;
-    padding: 1rem 1rem;
+    padding: 0.5rem 0.5rem;
     display: flex;
-    justify-content: space-between;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color:var(--text-primary);
 }
 
 .navbar-links {
@@ -17,6 +17,7 @@
     align-items: left;
     gap: 60px;                
     padding: 5px;
+    color:var(--text-primary);
 }
 
 .nav-link {
@@ -24,6 +25,7 @@
     padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: background-color 0.2s;
+    color:var(--text-primary);
 }
 
 .nav-link:hover {
@@ -48,14 +50,10 @@
     }
 }
 
-h2{
-    background: none;
-    color: #5c779a;
-}
+
 
 .navbar
 {
-
     height: 80px;
     display: flex;
     justify-content: start;
@@ -79,6 +77,7 @@ h2{
     top: 0;
     left: -100%;
     transition: 850ms;
+
 }
 
 .nav-menu.active
@@ -100,7 +99,7 @@ h2{
 
 .nav-text a {
     text-decoration: none;
-    color: white;
+    color:var(--text-primary);;
     font-size: 18px;
     width: 95%;
     height: 100%;

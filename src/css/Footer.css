@@ -3,8 +3,8 @@
   background:none;
   padding: 40px 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   border-top: 1px solid; /* Added proper border */
-    border-color: var(--text-muted); /* Use your theme color */
+   border-top: 1px solid; 
+    border-color: var(--text-muted); 
 }
 
 .footer-container {

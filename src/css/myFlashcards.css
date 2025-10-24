@@ -2,8 +2,9 @@
 
 .container {
     text-align: center;
+    margin-left:20px;
     padding: 2rem;
-    height: calc(100vh - 160px);
+    height: auto;
     background: none;
     position: relative;
     min-height: 500px;
