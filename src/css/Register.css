@@ -55,11 +55,11 @@
   z-index: 2;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(15px);
-  padding: 40px 50px;
+  padding: 2.5rem;
   border-radius: 20px;
   box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
   text-align: center;
-  width: 320px;
+  width: 28rem;
   transition: 0.3s ease;
 }
 
@@ -68,10 +68,12 @@
   box-shadow: 0 0 35px rgba(0, 255, 255, 0.4);
 }
 
-.register-card h2 {
-  margin-bottom: 20px;
-  color: #f0f0f0;
-  letter-spacing: 1px;
+.register-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .register-card form {

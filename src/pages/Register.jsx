@@ -65,7 +65,7 @@ function Register() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <h2>Create Account</h2>
+        <h1 className="register-title">Create Account</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
