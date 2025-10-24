@@ -8,7 +8,7 @@
 
 .Rev-card {
     width: 500px;
-    height: 300px;
+    height: 320px;
     perspective: 1200px;
     border-radius: 20px;
     position: relative;
@@ -52,7 +52,7 @@
 }
 
 .Rev-card.flipped .inner {
-    transform: rotateY(180deg);
+    transform: rotateX(180deg);
 }
 
 .front,
@@ -80,7 +80,7 @@
 .back {
     background: var(--card-back);
     color: var(--text-white);
-    transform: rotateY(180deg);
+    transform: rotateX(180deg);
 }
 
 .card-content {

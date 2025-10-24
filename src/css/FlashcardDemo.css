@@ -45,7 +45,7 @@ h4 {
 
 .card {
     width: 500px;
-    height: 300px;
+    height: 320px;
     perspective: 1200px;
     border-radius: 25px;
     cursor: pointer;
@@ -66,7 +66,7 @@ h4 {
 
 
 .card.flipped .card-inner {
-    transform: rotateY(180deg);
+    transform: rotateX(180deg);
 }
 
 .card-front,
@@ -95,7 +95,7 @@ h4 {
 
 .card-back {
     background: var(--card-back);
-    transform: rotateY(180deg);
+    transform: rotateX(180deg);
 }
 .card-front p {
     color: var(--card-front-text);
@@ -114,7 +114,7 @@ h4 {
 }
 
 .card.flipped:hover .card-inner {
-    transform: rotateY(180deg) scale(1.02);
+    transform: rotateX(180deg) scale(1.02);
 }
 
 
