@@ -19,7 +19,7 @@
     background: none;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: baseline;
     gap: 40px;
     padding: 40px;
     flex-wrap: wrap;
