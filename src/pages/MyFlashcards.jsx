@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../css/myFlashcards.css";
 import "../css/nav.css";
 
@@ -11,6 +11,7 @@ function MyFlashcards() {
   const [editIndex, setEditIndex] = useState(null);
   const [flippedIndex, setFlippedIndex] = useState(null);
   const [sidebarActive, setSidebarActive] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const checkSidebar = () => {
@@ -47,6 +48,77 @@ function MyFlashcards() {
     setAnswer("");
     setEditIndex(null);
     setError("");
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const csvContent = e.target.result;
+        const parsedCards = parseCSV(csvContent);
+        
+        if (parsedCards.length > 0) {
+          setFlashcards([...flashcards, ...parsedCards]);
+          setError("");
+          alert(`Successfully imported ${parsedCards.length} flashcards!`);
+        } else {
+          setError("No valid flashcards found in the CSV file.");
+        }
+      } catch (error) {
+        setError("Error parsing CSV file. Please check the format.");
+        console.error("CSV parsing error:", error);
+      }
+    };
+    reader.readAsText(file);
+    
+    // Reset file input
+    event.target.value = '';
+  };
+
+  const parseCSV = (csvContent) => {
+    const lines = csvContent.split('\n').filter(line => line.trim() !== '');
+    const flashcards = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      // Skip empty lines
+      if (!line) continue;
+
+      // Handle both comma-separated and quoted values
+      let question = '';
+      let answer = '';
+      
+      if (line.includes('","')) {
+        // Handle quoted CSV format
+        const match = line.match(/^"([^"]*)","([^"]*)"$/);
+        if (match) {
+          question = match[1].trim();
+          answer = match[2].trim();
+        }
+      } else {
+        // Handle simple comma-separated format
+        const parts = line.split(',').map(part => part.trim());
+        if (parts.length >= 2) {
+          question = parts[0];
+          answer = parts.slice(1).join(','); // In case answer contains commas
+        }
+      }
+
+      // Only add if both fields have content
+      if (question && answer) {
+        flashcards.push({ question, answer });
+      }
+    }
+
+    return flashcards;
   };
 
   const handleClose = () => {
@@ -101,11 +173,24 @@ function MyFlashcards() {
 
   return (
     <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".csv"
+        style={{ display: 'none' }}
+        onChange={handleFileUpload}
+      />
+      
       {!showForm ? (
         <>
-          <button className="add-flashcard" onClick={handleAddClick}>
-            ➕ Add Flashcard
-          </button>
+          <div className="action-buttons">
+            <button className="import-flashcard" onClick={handleImportClick}>
+              📁 Import CSV
+            </button>
+            <button className="add-flashcard" onClick={handleAddClick}>
+              ➕ Add Flashcard
+            </button>
+          </div>
 
           <div className="card-list-container">
             {flashcards.length === 0 && <p>No flashcards yet.</p>}
