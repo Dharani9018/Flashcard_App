@@ -13,6 +13,7 @@ import {FaSun,FaMoon}  from "react-icons/fa";
 import Home from "./pages/Home.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx"; 
 import LoggedInLayout from "./components/LoggedInLayout.jsx";
+import Settings from "./pages/Settings.jsx";
 //FaSun
 //FaMoon
 
@@ -50,6 +51,7 @@ function App() {
                         <Route path="my" element={<MyFlashcards />} />
                         <Route path="review" element={<ReviewMode />} />
                         <Route path="not_memorized" element={<NotMemorized />} />
+                        <Route path="settings" element={<Settings />} />
                     </Route>
                 </Routes>
             </main>
