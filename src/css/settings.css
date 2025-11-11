@@ -6,13 +6,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: transparent;
 }
 
 .settings-title {
     font-size: 1.8rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
     letter-spacing: 1px;
-    text-align: left;
+    text-align: center;
     width: 100%;
     max-width: 900px;
 }
@@ -23,6 +24,8 @@
     justify-content: space-between;
     width: 100%;
     max-width: 900px;
+    border-radius: 12px;
+    background: transparent;
 }
 
 .settings-card {
