@@ -1,5 +1,5 @@
 @import url("../Variables.css");
-/*
+
 .review-container {
   max-width: 600px;
   margin: 0 auto;
@@ -191,4 +191,4 @@
   .review-card.slide-to-bin {
     transform: translateX(-50px) scale(0.8);
   }
-}*/
+}

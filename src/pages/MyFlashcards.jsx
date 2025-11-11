@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../css/myFlashcards.css";
 import "../css/nav.css";
+import { IoIosAdd } from "react-icons/io";
+import { TbFileImport } from "react-icons/tb";
 
 function MyFlashcards() {
   const [question, setQuestion] = useState("");
@@ -185,10 +187,10 @@ function MyFlashcards() {
         <>
           <div className="action-buttons">
             <button className="import-flashcard" onClick={handleImportClick}>
-              📁 Import CSV
+              <TbFileImport size={19} /> Import CSV
             </button>
             <button className="add-flashcard" onClick={handleAddClick}>
-              ➕ Add Flashcard
+              <IoIosAdd size={19}/> Add Flashcard
             </button>
           </div>
 

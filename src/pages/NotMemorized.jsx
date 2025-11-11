@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/NotMemorized.css";
+import { MdDelete } from "react-icons/md";
 
 function NotMemorized() {
   const [notMemorizedCards, setNotMemorizedCards] = useState([]);
@@ -51,7 +52,7 @@ function NotMemorized() {
                 className="delete-card-btn"
                 onClick={() => deleteCard(index)}
               >
-                🗑️
+                <MdDelete />
               </button>
             </div>
           ))}

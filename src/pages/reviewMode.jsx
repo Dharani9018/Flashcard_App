@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../css/reviewMode.css";
 
 function ReviewMode() {
-  /*const [flashcards, setFlashcards] = useState([]);
+  const [flashcards, setFlashcards] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [timeLeft, setTimeLeft] = useState(5);
@@ -171,7 +171,7 @@ function ReviewMode() {
         </button>
       </div>
     </div>
-  );*/
+  );
 }
 
 export default ReviewMode;

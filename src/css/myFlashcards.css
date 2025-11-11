@@ -31,8 +31,8 @@
 .add-flashcard {
     padding: 0.6rem 1rem;
     border: none;
-    background-color: #059669;
-    color: white;
+    background:var(--button-bg);
+    color: var(--button-text);
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
