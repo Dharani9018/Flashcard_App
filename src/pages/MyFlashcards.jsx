@@ -3,13 +3,16 @@ import "../css/myFlashcards.css";
 import "../css/nav.css";
 
 function MyFlashcards() {
+  const [folders, setFolders] = useState({});
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [showFolderForm, setShowFolderForm] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [flashcards, setFlashcards] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [error, setError] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [flippedIndex, setFlippedIndex] = useState(null);
+  const [error, setError] = useState("");
   const [sidebarActive, setSidebarActive] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -31,16 +34,48 @@ function MyFlashcards() {
     };
   }, []);
 
+  // Load folders
   useEffect(() => {
-    const savedFlashcards = localStorage.getItem("flashcards");
-    if (savedFlashcards) {
-      setFlashcards(JSON.parse(savedFlashcards));
+    const savedFolders = localStorage.getItem("flashcardFolders");
+    if (savedFolders) {
+      setFolders(JSON.parse(savedFolders));
     }
   }, []);
 
+  // Save folders
   useEffect(() => {
-    localStorage.setItem("flashcards", JSON.stringify(flashcards));
-  }, [flashcards]);
+    localStorage.setItem("flashcardFolders", JSON.stringify(folders));
+  }, [folders]);
+
+  const handleCreateFolder = () => {
+    setShowFolderForm(true);
+    setNewFolderName("");
+    setError("");
+  };
+
+  const handleSaveFolder = () => {
+    const name = newFolderName.trim();
+    if (!name) {
+      setError("Folder name cannot be empty!");
+      return;
+    }
+    if (folders[name]) {
+      setError("A folder with this name already exists!");
+      return;
+    }
+    setFolders({ ...folders, [name]: [] });
+    setShowFolderForm(false);
+    setError("");
+  };
+
+  const handleDeleteFolder = (folderName) => {
+    if (window.confirm(`Delete folder "${folderName}" and all its flashcards?`)) {
+      const updated = { ...folders };
+      delete updated[folderName];
+      setFolders(updated);
+      if (selectedFolder === folderName) setSelectedFolder(null);
+    }
+  };
 
   const handleAddClick = () => {
     setShowForm(true);
@@ -50,6 +85,38 @@ function MyFlashcards() {
     setError("");
   };
 
+  const handleSaveFlashcard = () => {
+    if (!question.trim() || !answer.trim()) {
+      setError("Please fill out both fields!");
+      return;
+    }
+    const newCard = { question, answer };
+    const updated = { ...folders };
+
+    if (editIndex !== null) {
+      updated[selectedFolder][editIndex] = newCard;
+    } else {
+      updated[selectedFolder].push(newCard);
+    }
+    setFolders(updated);
+    setShowForm(false);
+    setError("");
+  };
+
+  const handleDeleteFlashcard = (index) => {
+    const updated = { ...folders };
+    updated[selectedFolder] = updated[selectedFolder].filter((_, i) => i !== index);
+    setFolders(updated);
+  };
+
+  const handleEditFlashcard = (index) => {
+    const card = folders[selectedFolder][index];
+    setQuestion(card.question);
+    setAnswer(card.answer);
+    setEditIndex(index);
+    setShowForm(true);
+  };
+
   const handleImportClick = () => {
     fileInputRef.current?.click();
   };
@@ -57,207 +124,217 @@ function MyFlashcards() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const csvContent = e.target.result;
-        const parsedCards = parseCSV(csvContent);
-        
+        const parsedCards = parseCSV(e.target.result);
         if (parsedCards.length > 0) {
-          setFlashcards([...flashcards, ...parsedCards]);
-          setError("");
-          alert(`Successfully imported ${parsedCards.length} flashcards!`);
+          const updated = { ...folders };
+          updated[selectedFolder] = [...updated[selectedFolder], ...parsedCards];
+          setFolders(updated);
+          alert(`Imported ${parsedCards.length} flashcards!`);
         } else {
-          setError("No valid flashcards found in the CSV file.");
+          setError("No valid flashcards found in file.");
         }
-      } catch (error) {
-        setError("Error parsing CSV file. Please check the format.");
-        console.error("CSV parsing error:", error);
+      } catch {
+        setError("Error parsing CSV file.");
       }
     };
     reader.readAsText(file);
-    
-    // Reset file input
-    event.target.value = '';
+    event.target.value = "";
   };
 
-  const parseCSV = (csvContent) => {
-    const lines = csvContent.split('\n').filter(line => line.trim() !== '');
-    const flashcards = [];
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      
-      // Skip empty lines
-      if (!line) continue;
-
-      // Handle both comma-separated and quoted values
-      let question = '';
-      let answer = '';
-      
+  const parseCSV = (content) => {
+    const lines = content.split("\n").filter((l) => l.trim());
+    const cards = [];
+    for (let line of lines) {
+      let q = "",
+          a = "";
       if (line.includes('","')) {
-        // Handle quoted CSV format
         const match = line.match(/^"([^"]*)","([^"]*)"$/);
         if (match) {
-          question = match[1].trim();
-          answer = match[2].trim();
+          q = match[1];
+          a = match[2];
         }
       } else {
-        // Handle simple comma-separated format
-        const parts = line.split(',').map(part => part.trim());
+        const parts = line.split(",");
         if (parts.length >= 2) {
-          question = parts[0];
-          answer = parts.slice(1).join(','); // In case answer contains commas
+          q = parts[0];
+          a = parts.slice(1).join(",");
         }
       }
-
-      // Only add if both fields have content
-      if (question && answer) {
-        flashcards.push({ question, answer });
-      }
+      if (q && a) cards.push({ question: q, answer: a });
     }
-
-    return flashcards;
-  };
-
-  const handleClose = () => {
-    setShowForm(false);
-    setError("");
-  };
-
-  const handleSave = () => {
-    if (!question.trim() || !answer.trim()) {
-      setError("Please fill out both fields!");
-      return;
-    }
-
-    const newCard = { question, answer };
-
-    if (editIndex !== null) {
-      const updatedCards = [...flashcards];
-      updatedCards[editIndex] = newCard;
-      setFlashcards(updatedCards);
-    } else {
-      setFlashcards([...flashcards, newCard]);
-    }
-
-    setShowForm(false);
-    setQuestion("");
-    setAnswer("");
-    setError("");
-  };
-
-  const handleEdit = (index) => {
-    const card = flashcards[index];
-    setQuestion(card.question);
-    setAnswer(card.answer);
-    setEditIndex(index);
-    setShowForm(true);
-  };
-
-  const handleDelete = (index) => {
-    const updatedCards = flashcards.filter((_, i) => i !== index);
-    setFlashcards(updatedCards);
+    return cards;
   };
 
   const toggleFlip = (index) => {
-    if (flippedIndex === index) {
-      setFlippedIndex(null);
-    } else {
-      // Smooth transition: wait a moment before flipping the next
-      setFlippedIndex(null);
-      setTimeout(() => setFlippedIndex(index), 150);
-    }
+    setFlippedIndex(flippedIndex === index ? null : index);
   };
 
   return (
-    <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept=".csv"
-        style={{ display: 'none' }}
-        onChange={handleFileUpload}
-      />
-      
-      {!showForm ? (
-        <>
-          <div className="action-buttons">
-            <button className="import-flashcard" onClick={handleImportClick}>
-              📁 Import CSV
-            </button>
-            <button className="add-flashcard" onClick={handleAddClick}>
-              ➕ Add Flashcard
-            </button>
-          </div>
+      <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
+        <input
+            type="file"
+            ref={fileInputRef}
+            accept=".csv"
+            style={{ display: "none" }}
+            onChange={handleFileUpload}
+        />
 
-          <div className="card-list-container">
-            {flashcards.length === 0 && <p>No flashcards yet.</p>}
-
-            {flashcards.map((card, index) => (
-              <div key={index} className="flashcard-item">
-                <div
-                  className={`flip-card ${
-                    flippedIndex === index ? "flipped" : ""
-                  }`}
-                  onClick={() => toggleFlip(index)}
-                >
-                  <div className="flip-card-inner">
-                    <div className="flip-card-front">
-                      <p>{card.question}</p>
+        {/* Folder View */}
+        {!selectedFolder && !showFolderForm && (
+            <div className="folder-view">
+              <h2 className="folder-title">📁 My Flashcard Folders</h2>
+              <div className="folder-grid">
+                {Object.keys(folders).length === 0 && (
+                    <p className="empty-msg">No folders yet.</p>
+                )}
+                {Object.keys(folders).map((folderName) => (
+                    <div key={folderName} className="folder-card">
+                      <h3 onClick={() => setSelectedFolder(folderName)}>
+                        {folderName}
+                      </h3>
+                      <button
+                          className="delete-folder"
+                          onClick={() => handleDeleteFolder(folderName)}
+                      >
+                        🗑️
+                      </button>
                     </div>
-                    <div className="flip-card-back">
-                      <p>{card.answer}</p>
-                    </div>
-                  </div>
-                </div>
+                ))}
+              </div>
+              <button className="add-flashcard" onClick={handleCreateFolder}>
+                ➕ Create Folder
+              </button>
+            </div>
+        )}
 
-                <div className="buttons-con">
-                  <button className="edit" onClick={() => handleEdit(index)}>
-                    ✏️ Edit
+        {/* Folder Creation Form */}
+        {showFolderForm && (
+            <div className="add-card">
+              <div className="form-container">
+                <h3>Create New Folder</h3>
+                <input
+                    type="text"
+                    placeholder="Enter folder name"
+                    value={newFolderName}
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                />
+                {error && <p className="error">{error}</p>}
+                <div className="btns">
+                  <button className="save-btn" onClick={handleSaveFolder}>
+                    Save
                   </button>
-                  <button className="delete" onClick={() => handleDelete(index)}>
-                    🗑️ Delete
+                  <button
+                      className="cancel-btn"
+                      onClick={() => setShowFolderForm(false)}
+                  >
+                    Cancel
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        </>
-      ) : (
-        <div className="add-card">
-          <div className="form-container">
-            <h3>{editIndex !== null ? "Edit Flashcard" : "Add Flashcard"}</h3>
-            <textarea
-              placeholder="Enter question"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              rows="4"
-              cols="40"
-            ></textarea>
-
-            <textarea
-              placeholder="Enter answer"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              rows="4"
-              cols="40"
-            ></textarea>
-
-            {error && <p className="error">{error}</p>}
-            <div className="btns">
-              <button className="save-btn" onClick={handleSave}>
-                Save
-              </button>
-              <button className="cancel-btn" onClick={handleClose}>
-                Cancel
-              </button>
             </div>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Inside Folder */}
+        {selectedFolder && !showForm && (
+            <>
+              <h2 className="folder-heading">
+                📂 {selectedFolder}
+                <button
+                    className="cancel-btn back-btn"
+                    onClick={() => setSelectedFolder(null)}
+                >
+                  ⬅ Back
+                </button>
+              </h2>
+
+              <div className="action-buttons">
+                <button className="import-flashcard" onClick={handleImportClick}>
+                  📁 Import CSV
+                </button>
+                <button className="add-flashcard" onClick={handleAddClick}>
+                  ➕ Add Flashcard
+                </button>
+              </div>
+
+              <div className="card-list-container">
+                {folders[selectedFolder].length === 0 && (
+                    <p>No flashcards in this folder.</p>
+                )}
+
+                {folders[selectedFolder].map((card, index) => (
+                    <div key={index} className="flashcard-item">
+                      <div
+                          className={`flip-card ${
+                              flippedIndex === index ? "flipped" : ""
+                          }`}
+                          onClick={() => toggleFlip(index)}
+                      >
+                        <div className="flip-card-inner">
+                          <div className="flip-card-front">
+                            <p>{card.question}</p>
+                          </div>
+                          <div className="flip-card-back">
+                            <p>{card.answer}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="buttons-con">
+                        <button
+                            className="edit"
+                            onClick={() => handleEditFlashcard(index)}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                            className="delete"
+                            onClick={() => handleDeleteFlashcard(index)}
+                        >
+                          🗑️ Delete
+                        </button>
+                      </div>
+                    </div>
+                ))}
+              </div>
+            </>
+        )}
+
+        {/* Add/Edit Flashcard */}
+        {showForm && (
+            <div className="add-card">
+              <div className="form-container">
+                <h3>{editIndex !== null ? "Edit Flashcard" : "Add Flashcard"}</h3>
+                <textarea
+                    placeholder="Enter question"
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                    rows="4"
+                ></textarea>
+                <textarea
+                    placeholder="Enter answer"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    rows="4"
+                ></textarea>
+                {error && <p className="error">{error}</p>}
+                <div className="btns">
+                  <button className="save-btn" onClick={handleSaveFlashcard}>
+                    Save
+                  </button>
+                  <button
+                      className="cancel-btn"
+                      onClick={() => setShowForm(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+        )}
+      </div>
   );
 }
 
