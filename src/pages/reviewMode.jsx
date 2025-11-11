@@ -14,11 +14,19 @@ function ReviewMode() {
 
   // Load flashcards from localStorage
   useEffect(() => {
-    const savedFlashcards = localStorage.getItem("flashcards");
-    if (savedFlashcards) {
-      setFlashcards(JSON.parse(savedFlashcards));
+    // Load flashcards from all folders in localStorage
+    const savedFolders = localStorage.getItem("flashcardFolders");
+    if (savedFolders) {
+      const parsed = JSON.parse(savedFolders);
+
+      // Merge all folder arrays into one
+      const allFlashcards = Object.values(parsed).flat();
+      setFlashcards(allFlashcards);
+    } else {
+      setFlashcards([]);
     }
   }, []);
+
 
   // Load not memorized cards
   const getNotMemorizedCards = () => {
