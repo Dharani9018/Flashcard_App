@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import "../css/settings.css";
 
 function Settings() {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    // ⭐ FIX: Prevent crash when user is null — wait for localStorage
+    if (!user) {
+        return <h2 className="settings-title">Loading...</h2>;
+    }
+
     // --- STATES ---
     const [emailData, setEmailData] = useState({
         newEmail: "",
@@ -17,7 +24,7 @@ function Settings() {
 
     const [message, setMessage] = useState("");
 
-    // --- INPUT HANDLERS ---
+    // INPUT HANDLERS
     const handleEmailChange = (e) => {
         const { name, value } = e.target;
         setEmailData((prev) => ({ ...prev, [name]: value }));
@@ -28,8 +35,8 @@ function Settings() {
         setPasswordData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // --- FRONTEND VALIDATION ---
-    const handleEmailSubmit = (e) => {
+    // --- UPDATE EMAIL ---
+    const handleEmailSubmit = async (e) => {
         e.preventDefault();
         const { newEmail, confirmEmail, currentPassword } = emailData;
 
@@ -38,12 +45,41 @@ function Settings() {
         if (newEmail !== confirmEmail)
             return setMessage("⚠️ New emails do not match.");
 
-        // Simulate success
-        setMessage("✅ Email updated successfully (simulation).");
-        setEmailData({ newEmail: "", confirmEmail: "", currentPassword: "" });
+        console.log("EMAIL REQUEST SENDING:", {
+            userId: user._id,
+            newEmail,
+            currentPassword,
+        });
+
+        try {
+            const res = await fetch("http://localhost:5000/api/users/update-email", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: user._id,
+                    newEmail,
+                    currentPassword,
+                }),
+            });
+
+            const data = await res.json();
+            setMessage(data.message);
+
+            if (res.ok) {
+                setEmailData({
+                    newEmail: "",
+                    confirmEmail: "",
+                    currentPassword: "",
+                });
+            }
+        } catch (err) {
+            console.log("FRONTEND EMAIL ERROR:", err);
+            setMessage("❌ Error updating email.");
+        }
     };
 
-    const handlePasswordSubmit = (e) => {
+    // --- UPDATE PASSWORD ---
+    const handlePasswordSubmit = async (e) => {
         e.preventDefault();
         const { newPassword, confirmPassword, currentPassword } = passwordData;
 
@@ -54,9 +90,39 @@ function Settings() {
         if (newPassword.length < 6)
             return setMessage("⚠️ Password should be at least 6 characters.");
 
-        // Simulate success
-        setMessage("✅ Password changed successfully (simulation).");
-        setPasswordData({ newPassword: "", confirmPassword: "", currentPassword: "" });
+        console.log("USER IN SETTINGS:", user);
+        console.log("USER ID:", user?._id);
+        console.log("PASSWORD REQUEST SENDING:", {
+            userId: user._id,
+            newPassword,
+            currentPassword
+        });
+
+        try {
+            const res = await fetch("http://localhost:5000/api/users/update-password", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: user._id,
+                    newPassword,
+                    currentPassword,
+                }),
+            });
+
+            const data = await res.json();
+            setMessage(data.message);
+
+            if (res.ok) {
+                setPasswordData({
+                    newPassword: "",
+                    confirmPassword: "",
+                    currentPassword: "",
+                });
+            }
+        } catch (err) {
+            console.log("FRONTEND PASSWORD ERROR:", err);
+            setMessage("❌ Error updating password.");
+        }
     };
 
     return (
@@ -64,6 +130,7 @@ function Settings() {
             <h2 className="settings-title">SETTINGS</h2>
 
             <div className="settings-wrapper">
+
                 {/* --- CHANGE EMAIL --- */}
                 <div className="settings-card">
                     <h3>Change Email</h3>
@@ -137,6 +204,7 @@ function Settings() {
                         </button>
                     </form>
                 </div>
+
             </div>
 
             {message && <p className="settings-message">{message}</p>}

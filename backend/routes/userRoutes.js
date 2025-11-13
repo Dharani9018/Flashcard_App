@@ -53,4 +53,49 @@ router.post("/login", async (req, res) => {
     }
 });
 
+// UPDATE EMAIL
+router.put("/update-email", async (req, res) => {
+    const { userId, newEmail, currentPassword } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch)
+            return res.status(400).json({ message: "Incorrect current password" });
+
+        user.email = newEmail;
+        await user.save();
+
+        res.json({ message: "Email updated successfully!" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// UPDATE PASSWORD
+
+router.put("/update-password", async (req, res) => {
+    const { userId, newPassword, currentPassword } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch)
+            return res.status(400).json({ message: "Incorrect current password" });
+
+        const hashed = await bcrypt.hash(newPassword, 10);
+        user.password = hashed;
+        await user.save();
+
+        res.json({ message: "Password updated successfully!" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 export default router;

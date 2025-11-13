@@ -39,6 +39,7 @@ const Login = ({ onLoginSuccess }) => {
             console.log("Login Response:", data);
 
             if (res.ok) {
+                localStorage.setItem("user", JSON.stringify(data.user)); // SAVE USER
                 if (onLoginSuccess) onLoginSuccess();
                 navigate("/login/home");
             } else {

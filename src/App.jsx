@@ -8,16 +8,25 @@ import ReviewMode from "./pages/reviewMode.jsx";
 import NotMemorized from "./pages/NotMemorized.jsx";
 import "../src/css/App.css";
 import Footer from "./components/Footer.jsx";
-import { useState } from "react";
 import { FaSun, FaMoon } from "react-icons/fa";
 import Home from "./pages/Home.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import LoggedInLayout from "./components/LoggedInLayout.jsx";
 import Settings from "./pages/Settings.jsx";
+import { useState, useEffect } from "react";
+
 
 function App() {
     const [isDark, setIsDark] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+            setIsLoggedIn(true);
+        }
+    }, []);
+
 
     return (
         <div data-theme={isDark ? "dark" : "light"}>
