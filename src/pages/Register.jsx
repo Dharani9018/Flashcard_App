@@ -49,13 +49,31 @@ function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Registered:", formData);
-    navigate("/login"); // ✅ redirect back to login after registration
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  return (
+        try {
+            const res = await fetch("http://localhost:5000/api/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.ok) {
+                navigate("/login");
+            } else {
+                alert(data.message || "Registration failed");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+
+    return (
     <div className="register-page-container">
       <div className="register-bg">{renderFlashcards()}</div>
 
