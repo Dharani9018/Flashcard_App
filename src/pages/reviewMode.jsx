@@ -15,9 +15,8 @@ function ReviewMode() {
 
   const timerRef = useRef(null);
 
-  // -------------------------------------------
-  // LOAD ALL FLASHCARDS FROM DATABASE
-  // -------------------------------------------
+// load flashcards
+
   useEffect(() => {
     async function loadCards() {
       const res = await fetch(`${API}/folders/${user._id}`);
@@ -37,9 +36,8 @@ function ReviewMode() {
     loadCards();
   }, [user._id]);
 
-  // -------------------------------------------
-  // START TIMER WHEN CARD CHANGES
-  // -------------------------------------------
+// timer
+
   useEffect(() => {
     if (flashcards.length === 0) return;
 
@@ -73,9 +71,8 @@ function ReviewMode() {
     return () => clearInterval(timerRef.current);
   }, [currentIndex, flashcards]);
 
-  // -------------------------------------------
-  // MARK CARD WRONG IN DATABASE
-  // -------------------------------------------
+// not memo
+
   const markWrong = async (card) => {
     await fetch(`${API}/flashcards/status`, {
       method: "PUT",
@@ -88,9 +85,7 @@ function ReviewMode() {
     });
   };
 
-  // -------------------------------------------
-  // NAVIGATION
-  // -------------------------------------------
+
   const nextCard = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setIsFlipped(false);

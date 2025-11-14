@@ -6,32 +6,96 @@ const API = "http://localhost:5000/api";
 
 function NotMemorized() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const [wrongCards, setWrongCards] = useState([]);
+  const [notMemorizedCards, setNotMemorizedCards] = useState([]);
+
+  //load cards
 
   useEffect(() => {
+    async function loadWrongCards() {
+      const res = await fetch(`${API}/flashcards/not-memorized/${user._id}`);
+      const data = await res.json();
+      setNotMemorizedCards(data);
+    }
     loadWrongCards();
-  }, []);
+  }, [user._id]);
 
-  const loadWrongCards = async () => {
-    const res = await fetch(`${API}/flashcards/not-memorized/${user._id}`);
-    const data = await res.json();
-    setWrongCards(data);
+
+  const deleteCard = async (card, index) => {
+    try {
+      await fetch(`${API}/flashcards/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          folderId: card.folderId,
+          index: card.index,
+          status: "new",
+        }),
+      });
+
+      const updated = [...notMemorizedCards];
+      updated.splice(index, 1);
+      setNotMemorizedCards(updated);
+    } catch (err) {
+      console.error("Error updating status", err);
+    }
+  };
+
+  // delete
+  const clearAllCards = async () => {
+    if (!window.confirm("Clear ALL not memorized cards?")) return;
+
+    try {
+      for (let card of notMemorizedCards) {
+        await fetch(`${API}/flashcards/status`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            folderId: card.folderId,
+            index: card.index,
+            status: "new",
+          }),
+        });
+      }
+
+      setNotMemorizedCards([]);
+    } catch (err) {
+      console.error("Error clearing all", err);
+    }
   };
 
   return (
       <div className="not-memorized-container">
-        <h2>Not Memorized Cards</h2>
+        <div className="not-memorized-header">
+          <h2>Not Memorized Cards</h2>
 
-        {wrongCards.length === 0 ? (
-            <p>No cards marked as wrong yet.</p>
+          {notMemorizedCards.length > 0 && (
+              <button className="clear-all-btn" onClick={clearAllCards}>
+                Clear All
+              </button>
+          )}
+        </div>
+
+        {notMemorizedCards.length === 0 ? (
+            <p>No cards marked as not memorized yet.</p>
         ) : (
             <div className="not-memorized-list">
-              {wrongCards.map((card, index) => (
+              {notMemorizedCards.map((card, index) => (
                   <div key={index} className="not-memorized-card">
                     <div className="card-content">
-                      <p><strong>Q:</strong> {card.question}</p>
-                      <p><strong>A:</strong> {card.answer}</p>
+                      <div className="card-question">
+                        <strong>Q:</strong> {card.question}
+                      </div>
+                      <div className="card-answer">
+                        <strong>A:</strong> {card.answer}
+                      </div>
                     </div>
+
+                    <button
+                        className="delete-card-btn"
+                        onClick={() => deleteCard(card, index)}
+                    >
+                      <MdDelete />
+                    </button>
                   </div>
               ))}
             </div>
