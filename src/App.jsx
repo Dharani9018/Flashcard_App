@@ -1,3 +1,4 @@
+// src/App.jsx - UPDATED
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Header from "./components/Header.jsx";
@@ -15,7 +16,6 @@ import LoggedInLayout from "./components/LoggedInLayout.jsx";
 import Settings from "./pages/Settings.jsx";
 import { useState, useEffect } from "react";
 
-
 function App() {
     const [isDark, setIsDark] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,27 +27,38 @@ function App() {
         }
     }, []);
 
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true);
+    }
 
     return (
         <div data-theme={isDark ? "dark" : "light"}>
+            <Routes> 
+                <Route path="/login" element={null} />
+                <Route path="/register" element={null} />
+                <Route path="/login/*" element={null} />
 
-            <Header
-                handleChange={() => setIsDark(!isDark)}
-                icon={isDark ? FaSun : FaMoon}
-                color1={isDark ? "#fffbc7" : "#283452"}
-                color2={isDark ? "#8d00b1ff" : "black"}
-            />
+                <Route path="*" element={
+                    <Header 
+                        handleChange={() => setIsDark(!isDark)}
+                        icon={isDark ? FaSun : FaMoon}
+                        color1={isDark ? "#fffbc7" : "#283452"}
+                        color2={isDark ? "#8d00b1ff" : "black"}
+                        isLoggedIn={false}
+                        onCardClick={() => {}} // Add empty function for public routes
+                    />
+                } />
+            </Routes>
 
             <main className="app-container">
                 <Routes>
-
                     {/* Public Routes */}
                     <Route path="/" element={<Demo />} />
 
                     {/* Login Page */}
                     <Route
                         path="/login"
-                        element={<Login onLoginSuccess={() => setIsLoggedIn(true)} />}
+                        element={<Login onLoginSuccess={handleLoginSuccess} />}
                     />
 
                     {/* Register Page */}
@@ -60,6 +71,10 @@ function App() {
                             <ProtectedRoute isLoggedIn={isLoggedIn}>
                                 <LoggedInLayout
                                     iconcolor={isDark ? "white" : "black"}
+                                    themeIcon={isDark ? FaSun : FaMoon} 
+                                    color1={isDark ? "#fffbc7" : "#283452"} 
+                                    color2={isDark ? "#8d00b1ff" : "black"} 
+                                    handleThemeChange={() => setIsDark(!isDark)} 
                                 />
                             </ProtectedRoute>
                         }
@@ -71,12 +86,10 @@ function App() {
                         <Route path="not_memorized" element={<NotMemorized />} />
                         <Route path="settings" element={<Settings />} />
                     </Route>
-
                 </Routes>
             </main>
 
             <Footer />
-
         </div>
     );
 }
