@@ -106,4 +106,21 @@ router.post("/import", async (req, res) => {
     }
 });
 
+router.get("/not-memorized/:userId", async (req, res) => {
+    try {
+        const folders = await Folder.find({ userId: req.params.userId });
+        let wrongCards = [];
+
+        folders.forEach(folder => {
+            folder.flashcards.forEach(card => {
+                if (card.status === "wrong") wrongCards.push(card);
+            });
+        });
+
+        res.json(wrongCards);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 export default router;

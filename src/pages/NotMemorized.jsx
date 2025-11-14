@@ -2,63 +2,41 @@ import React, { useState, useEffect } from "react";
 import "../css/NotMemorized.css";
 import { MdDelete } from "react-icons/md";
 
+const API = "http://localhost:5000/api";
+
 function NotMemorized() {
-  const [notMemorizedCards, setNotMemorizedCards] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [wrongCards, setWrongCards] = useState([]);
 
   useEffect(() => {
-    const savedCards = localStorage.getItem("notMemorized");
-    if (savedCards) {
-      setNotMemorizedCards(JSON.parse(savedCards));
-    }
+    loadWrongCards();
   }, []);
 
-  const clearAllCards = () => {
-    localStorage.removeItem("notMemorized");
-    setNotMemorizedCards([]);
-  };
-
-  const deleteCard = (index) => {
-    const updatedCards = notMemorizedCards.filter((_, i) => i !== index);
-    setNotMemorizedCards(updatedCards);
-    localStorage.setItem("notMemorized", JSON.stringify(updatedCards));
+  const loadWrongCards = async () => {
+    const res = await fetch(`${API}/flashcards/not-memorized/${user._id}`);
+    const data = await res.json();
+    setWrongCards(data);
   };
 
   return (
-    <div className="not-memorized-container">
-      <div className="not-memorized-header">
+      <div className="not-memorized-container">
         <h2>Not Memorized Cards</h2>
-        {notMemorizedCards.length > 0 && (
-          <button className="clear-all-btn" onClick={clearAllCards}>
-            Clear All
-          </button>
+
+        {wrongCards.length === 0 ? (
+            <p>No cards marked as wrong yet.</p>
+        ) : (
+            <div className="not-memorized-list">
+              {wrongCards.map((card, index) => (
+                  <div key={index} className="not-memorized-card">
+                    <div className="card-content">
+                      <p><strong>Q:</strong> {card.question}</p>
+                      <p><strong>A:</strong> {card.answer}</p>
+                    </div>
+                  </div>
+              ))}
+            </div>
         )}
       </div>
-
-      {notMemorizedCards.length === 0 ? (
-        <p>No cards marked as not memorized yet.</p>
-      ) : (
-        <div className="not-memorized-list">
-          {notMemorizedCards.map((card, index) => (
-            <div key={index} className="not-memorized-card">
-              <div className="card-content">
-                <div className="card-question">
-                  <strong>Q:</strong> {card.question}
-                </div>
-                <div className="card-answer">
-                  <strong>A:</strong> {card.answer}
-                </div>
-              </div>
-              <button 
-                className="delete-card-btn"
-                onClick={() => deleteCard(index)}
-              >
-                <MdDelete />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
