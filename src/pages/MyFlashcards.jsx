@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../css/myFlashcards.css";
 import "../css/nav.css";
+import { IoIosArrowDropleft } from "react-icons/io";
+import { CiImport } from "react-icons/ci";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 const API = "http://localhost:5000/api";
 
@@ -21,6 +24,9 @@ function MyFlashcards() {
   const [sidebarActive, setSidebarActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
+  const [fabOpen, setFabOpen] = useState(false);
+  const toggleFab = () => setFabOpen(!fabOpen);
+
 
   // Detect sidebar open/close
   useEffect(() => {
@@ -389,14 +395,26 @@ function MyFlashcards() {
                 </button>
               </h2>
 
-              <div className="action-buttons">
-                <button className="import-flashcard" onClick={handleImportClick}>
-                  📁 Import CSV
-                </button>
-                <button className="add-flashcard" onClick={handleAddClick}>
-                  ➕ Add Flashcard
-                </button>
-              </div>
+                <div className={`fab-wrapper ${fabOpen ? "open" : ""}`}>
+                    <div className="fab-main" onClick={toggleFab}>
+                        <IoIosArrowDropleft size={38} />
+                    </div>
+
+                    <div className="fab-menu">
+                        <div className="fab-icon"
+                            onClick={handleImportClick}>
+                                <CiImport size={28} />
+                                <span className="fab-tooltip">Import CSV</span>
+                        </div>
+
+                        <div className="fab-icon"
+                            onClick={handleAddClick}>
+                            <IoMdAddCircleOutline size={30} />
+                            <span className="fab-tooltip">Add</span>
+                        </div>
+                    </div>
+                </div>
+
 
               <div className="card-list-container">
                 {selectedFolder.flashcards.length === 0 && (

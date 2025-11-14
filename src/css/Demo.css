@@ -2,7 +2,7 @@
 .demo-container {
     background: none;
     min-height: 100vh;
-    padding: 20px;
+    padding: 10px;
 }
 
 h2 {
@@ -22,7 +22,7 @@ h2 {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 2rem;
+    margin-top: 0rem;
     background: none;
 }
 
