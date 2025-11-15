@@ -1,7 +1,16 @@
 import React from "react";
 import "../css/About.css";
-
+import { useOutletContext} from "react-router-dom";
+import { useEffect } from "react";
 const About = () => {
+ 
+        const outletContext = useOutletContext();
+        const setPageTitle = outletContext?.setPageTitle || (() => {});
+    
+        useEffect(() => {
+            setPageTitle("About");
+        }, [setPageTitle]);
+
     return (
         <div className="about-page">
             <div className="about-content">
