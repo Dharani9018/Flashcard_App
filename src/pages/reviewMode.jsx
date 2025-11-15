@@ -9,32 +9,26 @@ function ReviewMode() {
   const [flashcards, setFlashcards] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(5);
-  const [showBin, setShowBin] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
 
-  const timerRef = useRef(null);    
+  const [userAnswer, setUserAnswer] = useState("");
+  const [feedback, setFeedback] = useState(null); // correct | wrong | timeout
+  const [timeLeft, setTimeLeft] = useState(15);
+
+  const timerRef = useRef(null);
   const outletContext = useOutletContext();
   const setPageTitle = outletContext?.setPageTitle || (() => {});
 
-  // Set page title
   useEffect(() => {
-    setPageTitle("Review Mode"); // Changed from "Home" to "Review Mode"
+    setPageTitle("Review Mode");
   }, [setPageTitle]);
 
-  // Load user safely
+  // Load user
   useEffect(() => {
-    try {
-      const userData = localStorage.getItem("user");
-      if (userData) {
-        setUser(JSON.parse(userData));
-      }
-    } catch (error) {
-      console.error("Error loading user data:", error);
-    }
+    const data = localStorage.getItem("user");
+    if (data) setUser(JSON.parse(data));
   }, []);
 
-  // Load flashcards when user is available
+  // Load flashcards
   useEffect(() => {
     if (!user?._id) return;
 
@@ -44,16 +38,16 @@ function ReviewMode() {
         const data = await res.json();
 
         const merged = data.flatMap(folder =>
-          folder.flashcards.map(card => ({
-            ...card,
-            folderId: folder._id,
-            index: folder.flashcards.indexOf(card),
-          }))
+            folder.flashcards.map((card, idx) => ({
+              ...card,
+              folderId: folder._id,
+              index: idx,
+            }))
         );
 
         setFlashcards(merged);
-      } catch (error) {
-        console.error("Error loading flashcards:", error);
+      } catch (err) {
+        console.error(err);
       }
     }
 
@@ -62,39 +56,31 @@ function ReviewMode() {
 
   // Timer logic
   useEffect(() => {
-    if (flashcards.length === 0) return;
+    if (!flashcards.length) return;
 
-    setTimeLeft(5);
-    setShowBin(true);
-    setIsAnimating(false);
+    setIsFlipped(false);
+    setFeedback(null);
+    setUserAnswer("");
+    setTimeLeft(15);
 
     if (timerRef.current) clearInterval(timerRef.current);
 
     timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
+      setTimeLeft(sec => {
+        if (sec <= 1) {
           clearInterval(timerRef.current);
-
-          markWrong(flashcards[currentIndex]); // AUTO MARK WRONG
-
-          setIsAnimating(true);
-
-          setTimeout(() => {
-            setIsAnimating(false);
-            setShowBin(false);
-            nextCard();
-          }, 1000);
-
+          markWrong(flashcards[currentIndex]);
+          setFeedback("timeout");
+          setIsFlipped(true);
           return 0;
         }
-        return prev - 1;
+        return sec - 1;
       });
     }, 1000);
 
     return () => clearInterval(timerRef.current);
-  }, [currentIndex, flashcards]);
+  }, [currentIndex]);
 
-  // Mark card as wrong
   const markWrong = async (card) => {
     try {
       await fetch(`${API}/flashcards/status`, {
@@ -103,89 +89,111 @@ function ReviewMode() {
         body: JSON.stringify({
           folderId: card.folderId,
           index: card.index,
-          status: "wrong",
+          status: "not-memorized",
         }),
       });
-    } catch (error) {
-      console.error("Error marking card as wrong:", error);
+    } catch (err) {
+      console.error("Error marking wrong", err);
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    clearInterval(timerRef.current);
+
+    const card = flashcards[currentIndex];
+    const correct = card.answer.trim().toLowerCase();
+    const typed = userAnswer.trim().toLowerCase();
+
+    if (typed === correct) {
+      setFeedback("correct");
+    } else {
+      setFeedback("wrong");
+      await markWrong(card);
+    }
+
+    setIsFlipped(true);
+  };
+
   const nextCard = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
     setIsFlipped(false);
-    setCurrentIndex((i) => (i + 1) % flashcards.length);
+    setFeedback(null);
+    setUserAnswer("");
+    setCurrentIndex(i => (i + 1 < flashcards.length ? i + 1 : 0));
   };
 
-  const prevCard = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setIsFlipped(false);
-    setCurrentIndex((i) =>
-      i === 0 ? flashcards.length - 1 : i - 1
-    );
-  };
+  if (!user) return <p>Loading...</p>;
+  if (!flashcards.length) return <p>No flashcards found.</p>;
 
-  const toggleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
-
-  // Show loading while user data is being fetched
-  if (!user) {
-    return (
-      <div className="review-container">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  // Show message when no flashcards available
-  if (flashcards.length === 0) {
-    return (
-      <div className="review-container">
-        <p>No flashcards available.</p>
-      </div>
-    );
-  }
-
-  const currentCard = flashcards[currentIndex];
+  const card = flashcards[currentIndex];
 
   return (
-    <div className="review-container">
-      <div className="card-counter-top">
-        <div>Card {currentIndex + 1} of {flashcards.length}</div>
-        <div className="timer">Time left: {timeLeft}s</div>
-      </div>
+      <div className="review-container">
 
-      <div className="review-card-wrapper">
-        <div
-          className={`review-card ${isFlipped ? "flipped" : ""} ${
-            isAnimating ? "slide-to-bin" : ""
-          }`}
-          onMouseEnter={toggleFlip}
-          onMouseLeave={toggleFlip}
-        >
-          <div className="review-card-inner">
-            <div className="review-card-front">
-              <p>{currentCard.question}</p>
+        <div className="card-counter-top">
+          <div>Card {currentIndex + 1} of {flashcards.length}</div>
+          <div className="timer">Time left: {timeLeft}s</div>
+        </div>
+
+        {/* YOUR EXACT CARD UI */}
+        <div className={`Rev-card ${isFlipped ? "flipped" : ""}`}>
+          <div className="inner">
+
+            {/* FRONT SIDE */}
+            <div className="front">
+              <div className="card-content">
+                <p className="question">{card.question}</p>
+
+                <form onSubmit={handleSubmit}>
+                <textarea
+                    className="answer-input"
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    placeholder="Type your answer..."
+                    rows="3"
+                    disabled={feedback}
+                />
+
+                  {!feedback && (
+                      <button type="submit" className="submit-btn">
+                        Submit Answer
+                      </button>
+                  )}
+                </form>
+              </div>
             </div>
-            <div className="review-card-back">
-              <p>{currentCard.answer}</p>
+
+            {/* BACK SIDE */}
+            <div className="back">
+              <div className="card-content">
+
+                <p className="answer-label">Your Answer:</p>
+                <p className="user-answer">"{userAnswer || "—"}"</p>
+
+                <p className="answer-label">Correct Answer:</p>
+                <p className="answer-text">{card.answer}</p>
+
+                {feedback === "correct" && (
+                    <p className="feedback-correct">✔ Correct!</p>
+                )}
+                {feedback === "wrong" && (
+                    <p className="feedback-wrong">✖ Wrong</p>
+                )}
+                {feedback === "timeout" && (
+                    <p className="feedback-timeout">⏱ Time’s Up</p>
+                )}
+
+                <button onClick={nextCard} className="back-btn">
+                  Next →
+                </button>
+
+              </div>
             </div>
+
           </div>
         </div>
 
-        {showBin && (
-          <div className="bin-container">
-            <div className="bin-icon">🗑️</div>
-          </div>
-        )}
       </div>
-
-      <div className="review-controls">
-        <button onClick={prevCard}>⬅️ Previous</button>
-        <button onClick={nextCard}>Next ➡️</button>
-      </div>
-    </div>
   );
 }
 
