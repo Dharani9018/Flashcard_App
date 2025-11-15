@@ -1,11 +1,15 @@
 // src/components/Header.jsx
 import "../css/Header.css";
 import { TbCards } from "react-icons/tb";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";   // ⬅ add useLocation
 import { IconContext } from "react-icons";
 import React from "react";
 
 function Header({ handleChange, icon: Icon, color1, color2, onCardClick, isLoggedIn, title }) {
+    
+    const location = useLocation(); // ⬅ detect current route
+    const hideTitle = location.pathname === "/login/home"; // ⬅ hide ONLY on home page
+
     return (
         <div className="header">
             <div className="header-left">
@@ -28,9 +32,11 @@ function Header({ handleChange, icon: Icon, color1, color2, onCardClick, isLogge
 
             {/* CENTER TITLE */}
             <div className="header-center" style={{ flex: 1, textAlign: "center" }}>
-                <div className="page-title" aria-live="polite" style={{ fontSize: 18, fontWeight: 600 }}>
-                    {title || ""}
-                </div>
+                {!hideTitle && (   // ⬅ hide ONLY on home
+                    <div className="page-title" aria-live="polite" style={{ fontSize: 18, fontWeight: 600 }}>
+                        {title || ""}
+                    </div>
+                )}
             </div>
 
             <div className="toggle-container" style={{ display: "flex", alignItems: "center" }}>

@@ -1,23 +1,25 @@
 @import url('../Variables.css');
-.title-nav{
+
+.title-nav {
     margin-left: 290px;
     font-size: 25px;
-    color:var(--text-primary);
+    color: var(--text-primary);
 }
+
 .navbar {
     background: none;
     padding: 0.5rem 0.5rem;
     display: flex;
-    color:var(--text-primary);
+    color: var(--text-primary);
 }
 
 .navbar-links {
     display: flex;
-    justify-content: left;   
+    justify-content: left;
     align-items: left;
-    gap: 60px;                
+    gap: 60px;
     padding: 5px;
-    color:var(--text-primary);
+    color: var(--text-primary);
 }
 
 .nav-link {
@@ -25,7 +27,7 @@
     padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: background-color 0.2s;
-    color:var(--text-primary);
+    color: var(--text-primary);
 }
 
 .nav-link:hover {
@@ -50,25 +52,25 @@
     }
 }
 
-
-
-.navbar
-{
+.navbar {
     height: 80px;
     display: flex;
     justify-content: start;
     align-items: center;
 }
 
-.menu-bars
-{
+.menu-bars {
     margin-left: 2rem;
-    font-size: 2rem; 
+    font-size: 2rem;
 }
 
-.nav-menu
-{
-    background:var(--side-bar); 
+/* ----------------------------- */
+/* ⭐ FINAL IMPORTANT FIX BELOW  */
+/* ----------------------------- */
+
+.nav-menu,
+.nav-menu.active {
+    background: var(--side-bar);
     width: 250px;
     height: 100vh;
     display: flex;
@@ -78,16 +80,19 @@
     left: -100%;
     transition: 850ms;
 
+    /* ⭐ Sidebar ALWAYS stays above home background + floating cards */
+    z-index: 99999 !important;
+    pointer-events: auto !important;
 }
 
-.nav-menu.active
-{
+.nav-menu.active {
     left: 0;
     transition: 350ms;
 }
 
-.nav-text
-{
+/* ----------------------------- */
+
+.nav-text {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -99,7 +104,7 @@
 
 .nav-text a {
     text-decoration: none;
-    color:var(--text-primary);;
+    color: var(--text-primary);
     font-size: 18px;
     width: 95%;
     height: 100%;
@@ -107,28 +112,24 @@
     align-items: center;
     padding: 0 16px;
     border-radius: 4px;
-
 }
 
-.nav-text a:hover
-{
+.nav-text a:hover {
     background-color: #1a83ff;
 }
 
-.nav-menu-items
-{
+.nav-menu-items {
     width: 100%;
 }
 
-.navbar-toggle
-{
-    background:none ;
+.navbar-toggle {
+    background: none;
     width: 100%;
     height: 80px;
     display: flex;
     align-items: center;
 }
 
-span{
+span {
     margin-left: 16px;
 }

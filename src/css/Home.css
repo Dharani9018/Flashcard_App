@@ -1,5 +1,225 @@
-.home
-{
-    background:none;
-    height:90vh;
+/* =====================================================
+   HOME CONTAINER
+   ===================================================== */
+
+.home-container {
+    height: 90vh;
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: var(--background);
+    color: var(--text-primary);
+    text-align: center;
+    padding: 20px;
+}
+
+
+/* =====================================================
+   FLOATING BACKGROUND CARDS
+   ===================================================== */
+
+.home-container .enhanced-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.home-container .home-float {
+    position: absolute;
+
+    /* Horizontal card */
+    width: 100px;
+    height: 55px;
+    border-radius: 14px;
+
+    background: var(--card-color);
+    opacity: 0.5;
+    backdrop-filter: blur(5px);
+
+    box-shadow: 0 0 10px rgba(255, 200, 255, 0.25);
+
+    animation: homeFloatAnim linear infinite;
+    transform-style: preserve-3d;
+
+    z-index: 0;
+}
+
+/* 3D wrapper FIXED */
+.home-container .home-float.card-3d {
+    perspective: 800px;
+}
+
+/* Q/A faces */
+.home-container .home-card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+
+    backface-visibility: hidden;
+}
+
+.home-container .home-card-front {
+    background: var(--card-color);
+}
+
+.home-container .home-card-back {
+    background: var(--card-color);
+    transform: rotateY(180deg);
+}
+
+/* card floating motion */
+@keyframes homeFloatAnim {
+    0% {
+        transform: translate(0px, 0px) rotateY(0deg) rotateX(0deg);
+    }
+    25% {
+        transform: translate(15px, -15px) rotateY(90deg) rotateX(15deg);
+    }
+    50% {
+        transform: translate(-10px, 5px) rotateY(180deg) rotateX(5deg);
+    }
+    75% {
+        transform: translate(12px, 18px) rotateY(270deg) rotateX(-10deg);
+    }
+    100% {
+        transform: translate(0px, 0px) rotateY(360deg) rotateX(0deg);
+    }
+}
+
+
+/* =====================================================
+   KEEP CONTENT ABOVE CARDS
+   ===================================================== */
+
+.home-container .home-title,
+.home-container .home-subtitle,
+.home-container .home-buttons {
+    position: relative;
+    z-index: 10;
+}
+
+
+/* =====================================================
+   TITLE STYLING
+   ===================================================== */
+
+.home-container .home-title {
+    font-family: "Georgia", serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: #3b1f47;
+
+    text-shadow:
+        0 0 12px rgba(200, 120, 255, 0.35),
+        0 0 25px rgba(255, 160, 255, 0.25);
+
+    margin-bottom: 25px;
+    transition: 0.3s ease;
+}
+
+.home-container .home-title:hover {
+    transform: translateY(-6px);
+    text-shadow:
+        0 0 18px rgba(210, 140, 255, 0.55),
+        0 0 32px rgba(255, 180, 255, 0.35);
+}
+
+/* Dark mode title glow FIX */
+[data-theme="dark"] .home-title {
+    color: #f9e9ff !important;
+    text-shadow:
+        0 0 15px rgba(210, 160, 255, 0.7),
+        0 0 35px rgba(180, 120, 255, 0.5),
+        0 0 55px rgba(255, 160, 255, 0.4);
+}
+
+
+/* =====================================================
+   SUBTITLE
+   ===================================================== */
+
+.home-container .home-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    opacity: 0.9;
+    margin-bottom: 35px;
+}
+
+[data-theme="dark"] .home-subtitle {
+    color: #f5e9ff !important;
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(200, 160, 255, 0.4);
+}
+
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+.home-container .home-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: 320px;
+}
+
+.home-container .home-btn {
+    width: 100%;
+    padding: 18px 24px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: white;
+
+    background: linear-gradient(135deg, #f48fb1, #ce93d8);
+    border-radius: 14px;
+
+    text-align: center;
+    text-decoration: none;
+
+    transition: 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+
+.home-container .home-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    filter: brightness(1.15);
+}
+
+/* dark mode blue buttons FIX */
+[data-theme="dark"] .home-btn {
+    background: linear-gradient(135deg, #0a3d62, #1b73c2);
+    color: #ffffff;
+}
+
+[data-theme="dark"] .home-btn:hover {
+    box-shadow: 0 0 14px rgba(90, 150, 255, 0.45);
+    filter: brightness(1.2);
+}
+.home-float {
+    z-index: 5000 !important;     /* ABOVE EVERYTHING EXCEPT SIDEBAR */
+    opacity: 1 !important;        /* Make visible */
+    background: red !important;   /* TEMP bright red to test visibility */
+}
+
+.home-card-face {
+    color: white !important;
+    opacity: 1 !important;
+    backface-visibility: visible !important;
 }
