@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect import
 import "../css/settings.css";
+import { useOutletContext } from "react-router-dom";
+
+const API = "http://localhost:5000/api";
 
 function Settings() {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const outletContext = useOutletContext();
+    const setPageTitle = outletContext?.setPageTitle || (() => {});
+    
+    // Set page title
+    useEffect(() => {
+        setPageTitle("Settings"); // Changed from "Not memorized" to "Settings"
+    }, [setPageTitle]);
 
-    // ⭐ FIX: Prevent crash when user is null — wait for localStorage
-    if (!user) {
-        return <h2 className="settings-title">Loading...</h2>;
-    }
+    // Get user from localStorage safely
+    const [user, setUser] = useState(null);
+    
+    // Load user from localStorage after component mounts
+    useEffect(() => {
+        try {
+            const userData = localStorage.getItem("user");
+            if (userData) {
+                setUser(JSON.parse(userData));
+            }
+        } catch (error) {
+            console.error("Error loading user data:", error);
+        }
+    }, []);
 
     // --- STATES ---
     const [emailData, setEmailData] = useState({
@@ -38,6 +57,13 @@ function Settings() {
     // --- UPDATE EMAIL ---
     const handleEmailSubmit = async (e) => {
         e.preventDefault();
+        
+        // Check if user is available
+        if (!user) {
+            setMessage("❌ User not found. Please log in again.");
+            return;
+        }
+
         const { newEmail, confirmEmail, currentPassword } = emailData;
 
         if (!newEmail || !confirmEmail || !currentPassword)
@@ -52,7 +78,7 @@ function Settings() {
         });
 
         try {
-            const res = await fetch("http://localhost:5000/api/users/update-email", {
+            const res = await fetch(`${API}/users/update-email`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -71,6 +97,12 @@ function Settings() {
                     confirmEmail: "",
                     currentPassword: "",
                 });
+                
+                // Update user in localStorage if email was changed successfully
+                if (data.user) {
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    setUser(data.user);
+                }
             }
         } catch (err) {
             console.log("FRONTEND EMAIL ERROR:", err);
@@ -81,6 +113,13 @@ function Settings() {
     // --- UPDATE PASSWORD ---
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
+        
+        // Check if user is available
+        if (!user) {
+            setMessage("❌ User not found. Please log in again.");
+            return;
+        }
+
         const { newPassword, confirmPassword, currentPassword } = passwordData;
 
         if (!newPassword || !confirmPassword || !currentPassword)
@@ -90,8 +129,6 @@ function Settings() {
         if (newPassword.length < 6)
             return setMessage("⚠️ Password should be at least 6 characters.");
 
-        console.log("USER IN SETTINGS:", user);
-        console.log("USER ID:", user?._id);
         console.log("PASSWORD REQUEST SENDING:", {
             userId: user._id,
             newPassword,
@@ -99,7 +136,7 @@ function Settings() {
         });
 
         try {
-            const res = await fetch("http://localhost:5000/api/users/update-password", {
+            const res = await fetch(`${API}/users/update-password`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -125,9 +162,13 @@ function Settings() {
         }
     };
 
+    // ⭐ FIX: Prevent crash when user is null — show loading
+    if (!user) {
+        return <h2 className="settings-title">Loading...</h2>;
+    }
+
     return (
         <div className="settings-container">
-            <h2 className="settings-title">SETTINGS</h2>
 
             <div className="settings-wrapper">
 

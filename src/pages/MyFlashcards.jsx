@@ -1,9 +1,12 @@
+// src/pages/MyFlashcards.jsx
 import React, { useState, useEffect, useRef } from "react";
 import "../css/myFlashcards.css";
 import "../css/nav.css";
 import { IoIosArrowDropleft } from "react-icons/io";
 import { CiImport } from "react-icons/ci";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { MdDelete, MdOutlineModeEdit } from "react-icons/md";
+import { useOutletContext } from "react-router-dom";
 
 const API = "http://localhost:5000/api";
 
@@ -27,8 +30,11 @@ function MyFlashcards() {
   const [fabOpen, setFabOpen] = useState(false);
   const toggleFab = () => setFabOpen(!fabOpen);
 
+  // setPageTitle from layout
+  const outletContext = useOutletContext();
+  const setPageTitle = outletContext?.setPageTitle || (() => {});
 
-  // Detect sidebar open/close
+  // sidebar listener
   useEffect(() => {
     const checkSidebar = () => {
       const sidebar = document.querySelector(".nav-menu");
@@ -39,14 +45,13 @@ function MyFlashcards() {
     return () => clearInterval(interval);
   }, []);
 
-  // Load folders on mount
+  // load folders on mount
   useEffect(() => {
     if (user?._id) loadFolders();
+    setPageTitle("My Flashcards");
   }, [user?._id]);
 
-  // ---------------------------
-  // LOAD FOLDERS FROM DATABASE
-  // ---------------------------
+  // **LOAD FOLDERS**
   const loadFolders = async () => {
     setLoading(true);
     try {
@@ -59,17 +64,15 @@ function MyFlashcards() {
     setLoading(false);
   };
 
-  // Open a folder
   const openFolder = (id) => {
     const folder = folders.find((f) => f._id === id);
     setSelectedFolder(folder || null);
     setShowForm(false);
     setError("");
+    if (folder) setPageTitle(`My Flashcards / ${folder.name}`);
   };
 
-  // ---------------------------
-  // CREATE FOLDER
-  // ---------------------------
+  // **CREATE FOLDER**
   const handleCreateFolder = () => {
     setShowFolderForm(true);
     setNewFolderName("");
@@ -98,7 +101,6 @@ function MyFlashcards() {
     }
   };
 
-  // Delete folder
   const handleDeleteFolder = async (id) => {
     if (!window.confirm("Delete this folder and all its flashcards?")) return;
 
@@ -106,14 +108,13 @@ function MyFlashcards() {
       await fetch(`${API}/folders/${id}`, { method: "DELETE" });
       await loadFolders();
       setSelectedFolder(null);
+      setPageTitle("My Flashcards");
     } catch {
       setError("Error deleting folder");
     }
   };
 
-  // ---------------------------
-  // FLASHCARDS: ADD / EDIT
-  // ---------------------------
+  // **FLASHCARDS**
   const handleAddClick = () => {
     setQuestion("");
     setAnswer("");
@@ -131,7 +132,6 @@ function MyFlashcards() {
 
     try {
       if (editIndex !== null) {
-        // EDIT
         await fetch(`${API}/flashcards/update`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -143,15 +143,10 @@ function MyFlashcards() {
           }),
         });
       } else {
-        // ADD
         await fetch(`${API}/flashcards/add`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            folderId,
-            question,
-            answer,
-          }),
+          body: JSON.stringify({ folderId, question, answer }),
         });
       }
 
@@ -163,7 +158,6 @@ function MyFlashcards() {
     }
   };
 
-  // EDIT
   const handleEditFlashcard = (index) => {
     const card = selectedFolder.flashcards[index];
     setQuestion(card.question);
@@ -172,7 +166,6 @@ function MyFlashcards() {
     setShowForm(true);
   };
 
-  // DELETE
   const handleDeleteFlashcard = async (index) => {
     try {
       await fetch(`${API}/flashcards/delete`, {
@@ -187,9 +180,6 @@ function MyFlashcards() {
     }
   };
 
-  // ---------------------------
-  // REFRESH SELECTED FOLDER (IMPORTANT FIX)
-  // ---------------------------
   const refreshSelectedFolder = async () => {
     const updated = await (await fetch(`${API}/folders/${user._id}`)).json();
     const newFolder = updated.find((f) => f._id === selectedFolder._id);
@@ -197,49 +187,37 @@ function MyFlashcards() {
     setSelectedFolder(newFolder);
   };
 
-  // ---------------------------
-  // CSV IMPORT
-  // ---------------------------
+  // **CSV IMPORT**
   const handleImportClick = () => {
     if (!selectedFolder) return alert("Open a folder first.");
     fileInputRef.current?.click();
   };
 
-  // robust parser and import handler (replace existing parseCSV and handleFileUpload)
-
   const parseCSV = (content) => {
-    // split lines handling CRLF, remove empty rows
     const lines = content.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
     if (lines.length === 0) return [];
 
-    // If first line looks like header (contains "question" or "question,answer"), drop it
     const firstLower = lines[0].toLowerCase();
     if (firstLower.includes("question") && firstLower.includes("answer")) {
       lines.shift();
     }
 
     const cards = [];
-    // Use a simple CSV row parser that supports quoted fields with commas
     const parseRow = (row) => {
       const result = [];
       let cur = "";
       let inQuotes = false;
       for (let i = 0; i < row.length; i++) {
         const ch = row[i];
-        if (ch === '"' ) {
-          // peek next char to handle escaped quotes ""
-          if (inQuotes && row[i+1] === '"') {
+        if (ch === '"') {
+          if (inQuotes && row[i + 1] === '"') {
             cur += '"';
-            i++; // skip next quote
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (ch === ',' && !inQuotes) {
+            i++;
+          } else inQuotes = !inQuotes;
+        } else if (ch === "," && !inQuotes) {
           result.push(cur);
           cur = "";
-        } else {
-          cur += ch;
-        }
+        } else cur += ch;
       }
       result.push(cur);
       return result;
@@ -264,12 +242,11 @@ function MyFlashcards() {
     reader.onload = async (e) => {
       try {
         const cards = parseCSV(e.target.result);
-        if (!cards || cards.length === 0) {
+        if (!cards.length) {
           setError("Invalid CSV format or no valid cards found.");
           return;
         }
 
-        // call backend import route
         const res = await fetch(`${API}/flashcards/import`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -278,152 +255,210 @@ function MyFlashcards() {
 
         const data = await res.json();
         if (!res.ok) {
-          console.error("Import failed:", data);
           setError(data.message || "Import failed on server.");
           return;
         }
 
-        // REFRESH so new flashcards show immediately
         await refreshSelectedFolder();
-
         alert(data.message || `Imported ${cards.length} flashcards!`);
-      } catch (err) {
-        console.error("Error importing CSV:", err);
+      } catch {
         setError("Error importing CSV.");
       } finally {
-        // reset input so same file can be reselected later
-        if (event.target) event.target.value = "";
+        event.target.value = "";
       }
     };
 
     reader.readAsText(file);
   };
 
-
-  // ---------------------------
-  // CARD FLIP
-  // ---------------------------
+  // **FLIP**
   const toggleFlip = (index) => {
     setFlippedIndex(flippedIndex === index ? null : index);
   };
 
-  // ---------------------------
-  // UI START
-  // ---------------------------
+  // ================== UI ==================
   return (
-      <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
-        {/* Hidden File Input */}
-        <input
-            type="file"
-            ref={fileInputRef}
-            accept=".csv"
-            style={{ display: "none" }}
-            onChange={handleFileUpload}
-        />
+    <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
+      {/* FILE INPUT */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".csv"
+        style={{ display: "none" }}
+        onChange={handleFileUpload}
+      />
 
-        {/* ---------------- FOLDER LIST ---------------- */}
-        {!selectedFolder && !showFolderForm && (
-            <div className="folder-view">
-              <h2 className="folder-title">📁 My Flashcard Folders</h2>
+      {/* ========== FOLDER LIST ========== */}
+      {!selectedFolder && !showFolderForm && (
+        <div className="folder-view" style={{ padding: "2rem 1rem" }}>
 
-              {loading && <p>Loading...</p>}
+          {loading && <p style={{ textAlign: "center" }}>Loading...</p>}
 
-              <div className="folder-grid">
-                {folders.length === 0 && !loading && (
-                    <p className="empty-msg">No folders yet.</p>
-                )}
+          <div
+            className="folder-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: "1rem",
+              justifyItems: "center",
+              width: "100%",
+              maxWidth: "1100px",
+              margin: "1rem auto 3.5rem auto",
+            }}
+          >
+            {folders.length === 0 && !loading && (
+              <p className="empty-msg">No folders yet.</p>
+            )}
 
-                {folders.map((folder) => (
-                    <div key={folder._id} className="folder-card">
-                      <h3 onClick={() => openFolder(folder._id)}>{folder.name}</h3>
-                      <button
-                          className="delete-folder"
-                          onClick={() => handleDeleteFolder(folder._id)}
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                ))}
+            {folders.map((folder) => (
+              <div
+                key={folder._id}
+                className="folder-card"
+                style={{ width: "100%", maxWidth: 320, position: "relative" }}
+              >
+                <h3
+                  onClick={() => openFolder(folder._id)}
+                  style={{ cursor: "pointer", padding: "0.75rem" }}
+                >
+                  {folder.name}
+                </h3>
+
+                <button
+                  className="delete-folder"
+                  onClick={() => handleDeleteFolder(folder._id)}
+                  aria-label={`Delete ${folder.name}`}
+                  style={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <MdDelete size={20} />
+                </button>
               </div>
+            ))}
+          </div>
 
-              <button className="add-flashcard" onClick={handleCreateFolder}>
-                ➕ Create Folder
+          {/* CREATE FOLDER FAB */}
+          <div style={{ position: "fixed", right: 20, bottom: 20, zIndex: 50 }}>
+            <div
+              className="fab-main"
+              onClick={handleCreateFolder}
+              style={{
+                background: "#2f6ce5",
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
+                cursor: "pointer",
+              }}
+              title="Create folder"
+            >
+              <IoMdAddCircleOutline size={28} color="white" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========== CREATE FOLDER FORM ========== */}
+      {showFolderForm && (
+        <div className="add-card">
+          <div className="form-container">
+            <h3>Create New Folder</h3>
+
+            <input
+              type="text"
+              placeholder="Enter folder name"
+              value={newFolderName}
+              onChange={(e) => setNewFolderName(e.target.value)}
+            />
+
+            {error && <p className="error">{error}</p>}
+
+            <div className="btns">
+              <button className="save-btn" onClick={handleSaveFolder}>
+                Save
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => setShowFolderForm(false)}
+              >
+                Cancel
               </button>
             </div>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* ---------------- CREATE FOLDER FORM ---------------- */}
-        {showFolderForm && (
-            <div className="add-card">
-              <div className="form-container">
-                <h3>Create New Folder</h3>
+      {/* ========== INSIDE FOLDER ========== */}
+      {selectedFolder && !showForm && (
+        <>
+          {/* FIXED BACK BUTTON */}
+          <button
+            className="cancel-btn back-btn"
+            onClick={() => {
+              setSelectedFolder(null);
+              setPageTitle("My Flashcards");
+            }}
+            style={{
+              position: "fixed",
+              bottom: 20,
+              left: 20,
+              zIndex: 50,
+              padding: "10px 16px"
+            }}
+          >
+            ⬅ Back
+          </button>
 
-                <input
-                    type="text"
-                    placeholder="Enter folder name"
-                    value={newFolderName}
-                    onChange={(e) => setNewFolderName(e.target.value)}
-                />
+          {/* FAB MENU */}
+          <div className={`fab-wrapper ${fabOpen ? "open" : ""}`}>
+            <div
+              className="fab-main"
+              onClick={toggleFab}
+              style={{ position: "fixed", right: 20, bottom: 20, zIndex: 40 }}
+            >
+              <IoIosArrowDropleft size={38} />
+            </div>
 
-                {error && <p className="error">{error}</p>}
+            <div
+              className="fab-menu"
+              style={{ position: "fixed", right: 20, bottom: 86, zIndex: 40 }}
+            >
+              <div
+                className="fab-icon"
+                onClick={handleImportClick}
+                style={{ marginBottom: 10, cursor: "pointer" }}
+              >
+                <CiImport size={28} />
+                <span className="fab-tooltip">Import CSV</span>
+              </div>
 
-                <div className="btns">
-                  <button className="save-btn" onClick={handleSaveFolder}>
-                    Save
-                  </button>
-                  <button
-                      className="cancel-btn"
-                      onClick={() => setShowFolderForm(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
+              <div
+                className="fab-icon"
+                onClick={handleAddClick}
+                style={{ cursor: "pointer" }}
+              >
+                <IoMdAddCircleOutline size={30} />
+                <span className="fab-tooltip">Add</span>
               </div>
             </div>
-        )}
+          </div>
 
-        {/* ---------------- INSIDE FOLDER ---------------- */}
-        {selectedFolder && !showForm && (
-            <>
-              <h2 className="folder-heading">
-                📂 {selectedFolder.name}
-                <button
-                    className="cancel-btn back-btn"
-                    onClick={() => setSelectedFolder(null)}
-                >
-                  ⬅ Back
-                </button>
-              </h2>
+          <div className="card-list-container">
+            {selectedFolder.flashcards.length === 0 && (
+              <p>No flashcards in this folder.</p>
+            )}
 
-                <div className={`fab-wrapper ${fabOpen ? "open" : ""}`}>
-                    <div className="fab-main" onClick={toggleFab}>
-                        <IoIosArrowDropleft size={38} />
-                    </div>
-
-                    <div className="fab-menu">
-                        <div className="fab-icon"
-                            onClick={handleImportClick}>
-                                <CiImport size={28} />
-                                <span className="fab-tooltip">Import CSV</span>
-                        </div>
-
-                        <div className="fab-icon"
-                            onClick={handleAddClick}>
-                            <IoMdAddCircleOutline size={30} />
-                            <span className="fab-tooltip">Add</span>
-                        </div>
-                    </div>
-                </div>
-
-
-              <div className="card-list-container">
-                {selectedFolder.flashcards.length === 0 && (
-                    <p>No flashcards in this folder.</p>
-                )}
-
-                {selectedFolder.flashcards.map((card, index) => (
-                    <div key={index} className="flashcard-item">
-                      <div
+              {selectedFolder.flashcards.map((card, index) => (
+                <div key={index} className="flashcard-item">
+                                 <div
                           className={`flip-card ${
                               flippedIndex === index ? "flipped" : ""
                           }`}
@@ -443,14 +478,31 @@ function MyFlashcards() {
                         <button
                             className="edit"
                             onClick={() => handleEditFlashcard(index)}
+                             style={{
+                    position: "absolute",
+                    top: 8,
+                    right: 1,
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
                         >
-                          ✏️ Edit
+                          <MdOutlineModeEdit size={20} />
                         </button>
                         <button
                             className="delete"
                             onClick={() => handleDeleteFlashcard(index)}
-                        >
-                          🗑️ Delete
+                                        
+                  style={{
+                    position: "absolute",
+                    top: 8,
+                    right: 30,
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                    >
+                          <MdDelete  size={20}/>
                         </button>
                       </div>
                     </div>
@@ -459,40 +511,40 @@ function MyFlashcards() {
             </>
         )}
 
-        {/* ---------------- ADD / EDIT FLASHCARD FORM ---------------- */}
-        {showForm && (
-            <div className="add-card">
-              <div className="form-container">
-                <h3>{editIndex !== null ? "Edit Flashcard" : "Add Flashcard"}</h3>
+      {/* ADD/EDIT FLASHCARD FORM */}
+      {showForm && (
+        <div className="add-card">
+          <div className="form-container">
+            <h3>{editIndex !== null ? "Edit Flashcard" : "Add Flashcard"}</h3>
 
-                <textarea
-                    placeholder="Enter question"
-                    value={question}
-                    onChange={(e) => setQuestion(e.target.value)}
-                    rows="4"
-                />
+            <textarea
+              placeholder="Enter question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              rows="4"
+            />
 
-                <textarea
-                    placeholder="Enter answer"
-                    value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
-                    rows="4"
-                />
+            <textarea
+              placeholder="Enter answer"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              rows="4"
+            />
 
-                {error && <p className="error">{error}</p>}
+            {error && <p className="error">{error}</p>}
 
-                <div className="btns">
-                  <button className="save-btn" onClick={handleSaveFlashcard}>
-                    Save
-                  </button>
-                  <button className="cancel-btn" onClick={() => setShowForm(false)}>
-                    Cancel
-                  </button>
-                </div>
-              </div>
+            <div className="btns">
+              <button className="save-btn" onClick={handleSaveFlashcard}>
+                Save
+              </button>
+              <button className="cancel-btn" onClick={() => setShowForm(false)}>
+                Cancel
+              </button>
             </div>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

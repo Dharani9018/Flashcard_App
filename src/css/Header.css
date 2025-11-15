@@ -6,9 +6,19 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: none;
+    background: none !important;
     border-color: var(--text-muted); 
     opacity: 0.8;
+}
+
+.header-center{
+    background:none;
+}
+.header-left{
+    background:none;
+}
+.header-logo{
+    background:none !important;
 }
 
 /* Remove background from the card icon link/container */
@@ -18,30 +28,17 @@
     outline: none !important;
 }
 
-/* Target the SVG icon directly */
-.logo-flash svg {   
-    fill: pink;
-    background: none !important;
-    border: none !important;
-    box-shadow: none !important;
+.page-title{
+    background:none;
 }
 
-/* Remove any potential background from the parent elements */
-.logo-flash:hover,
-.logo-flash:focus,
-.logo-flash:active {
-    background: none !important;
-    border: none !important;
-    outline: none !important;
+.logo-flash svg {   
+    fill: pink;
 }
 
 .toggle-container {
-    background: none;
+    background:none;
 }
 
-/* Ensure the header itself has no background */
-.header h1 {
-    background: none !important;
-    margin: 0;
-    padding: 0;
-}
+
+

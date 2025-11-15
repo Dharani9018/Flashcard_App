@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "../css/NotMemorized.css";
 import { MdDelete } from "react-icons/md";
-
+import { useOutletContext} from "react-router-dom";
 const API = "http://localhost:5000/api";
 
 function NotMemorized() {
+    const outletContext = useOutletContext();
+  const setPageTitle = outletContext?.setPageTitle || (() => {});
+
+      useEffect(() => {
+        setPageTitle("Not memorized");
+    }, [setPageTitle]);
+
   const user = JSON.parse(localStorage.getItem("user"));
   const [notMemorizedCards, setNotMemorizedCards] = useState([]);
 
