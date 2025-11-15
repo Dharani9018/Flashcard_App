@@ -15,6 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import LoggedInLayout from "./components/LoggedInLayout.jsx";
 import Settings from "./pages/Settings.jsx";
 import { useState, useEffect } from "react";
+import About from "./pages/about.jsx"
 
 function App() {
     const [isDark, setIsDark] = useState(false);
@@ -85,6 +86,7 @@ function App() {
                         <Route path="review" element={<ReviewMode />} />
                         <Route path="not_memorized" element={<NotMemorized />} />
                         <Route path="settings" element={<Settings />} />
+                        <Route path="about" element={<About />} />
                     </Route>
                 </Routes>
             </main>

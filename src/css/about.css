@@ -1,0 +1,75 @@
+.about-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;      /* increased spacing at top */
+}
+
+.about-content {
+    width: 100%;
+    max-width: 780px;
+    padding: 40px 35px;      /* more padding inside card */
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+
+    text-align: center;
+    margin-bottom: 60px;     /* spacing from footer */
+}
+
+/* Main title */
+.about-content h1 {
+    font-size: 2.6rem;
+    margin-bottom: 22px;     /* more space */
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* Paragraph text */
+.about-content p {
+    font-size: 1.2rem;
+    line-height: 1.8;        /* better readability */
+    margin-bottom: 26px;     /* more breathing space */
+    text-align: justify;
+    color: var(--text-secondary);
+}
+
+/* Section titles */
+.about-section-title {
+    font-size: 2rem;
+    margin-top: 40px;        /* more space before each section */
+    margin-bottom: 18px;
+    color: var(--text-primary);
+    font-weight: 600;
+    text-align: center;
+}
+
+/* List of creators */
+.about-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;    /* space before next section */
+}
+
+.about-content li {
+    margin: 12px 0;         /* more space between each creator */
+    font-size: 1.15rem;
+    color: var(--text-primary);
+}
+
+.about-content a {
+    color: var(--text-accent);
+    font-weight: 500;
+}
+
+.about-content a:hover {
+    text-decoration: underline;
+}
+
+/* Extra bottom spacing so footer doesn’t overlap */
+.about-page {
+    padding-bottom: 120px;
+}
