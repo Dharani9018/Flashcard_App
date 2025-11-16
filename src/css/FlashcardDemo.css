@@ -20,7 +20,7 @@
     background: none;
     display: flex;
     justify-content: center;
-    align-items: center; /* ← FIXED */
+    align-items: flex-start; /* ← FIXED */
     gap: 40px;
     padding: 40px;
     flex-wrap: nowrap;

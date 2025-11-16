@@ -95,7 +95,7 @@
 .question {
     font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 2px;
     line-height: 1.4;
     color:var(--card-front)
 }
@@ -103,7 +103,7 @@
 .answer-input {
     width: 100%;
     min-height: 80px;
-    margin: 15px 0;
+    margin: 5px 0;
     padding: 12px;
     border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -126,7 +126,7 @@
 
 .submit-btn,
 .back-btn {
-    margin-top: 15px;
+    margin-top: 2px;
     padding: 12px 30px;
     border: none;
     border-radius: 10px;
@@ -149,14 +149,14 @@
 
 .answer-label {
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
     font-size: 1.1rem;
     color: rgba(255, 255, 255, 0.9);
 }
 
 .user-answer {
     font-style: italic;
-    margin-bottom: 20px;
+    margin-bottom: 2px;
     padding: 10px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -165,7 +165,7 @@
 
 .answer-text {
     font-size: 1.2rem;
-    margin-bottom: 25px;
+    margin-bottom: 2px;
     font-weight: 500;
     line-height: 1.4;
 }
@@ -179,17 +179,17 @@
         width: 350px;
         height: 400px;
     }
-    
+
     .front,
     .back {
         padding: 20px;
         font-size: 1rem;
     }
-    
+
     .question {
         font-size: 1.1rem;
     }
-    
+
     .answer-text {
         font-size: 1.1rem;
     }
@@ -200,7 +200,7 @@
         width: 300px;
         height: 450px;
     }
-    
+
     .Rev-card h4 {
         font-size: 1rem;
         background: none;
