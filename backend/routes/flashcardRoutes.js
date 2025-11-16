@@ -74,4 +74,82 @@ router.get("/not-memorized/:userId", async (req, res) => {
         res.status(500).json({ error: "Failed to fetch not memorized cards" });
     }
 });
+
+// ADD these below your existing handlers:
+
+// Add Flashcard
+router.post("/add", async (req, res) => {
+    const { folderId, question, answer } = req.body;
+
+    try {
+        const folder = await Folder.findById(folderId);
+        if (!folder) return res.status(404).json({ error: "Folder not found" });
+
+        folder.flashcards.push({ question, answer });
+        await folder.save();
+
+        res.json({ message: "Flashcard added", flashcards: folder.flashcards });
+    } catch (err) {
+        res.status(500).json({ error: "Error adding flashcard: " + err.message });
+    }
+});
+
+// Update Flashcard by index
+router.put("/update", async (req, res) => {
+    const { folderId, index, question, answer } = req.body;
+
+    try {
+        const folder = await Folder.findById(folderId);
+        if (!folder) return res.status(404).json({ error: "Folder not found" });
+
+        if (!folder.flashcards[index])
+            return res.status(404).json({ error: "Flashcard not found" });
+
+        folder.flashcards[index].question = question;
+        folder.flashcards[index].answer = answer;
+        await folder.save();
+
+        res.json({ message: "Flashcard updated", flashcards: folder.flashcards });
+    } catch (err) {
+        res.status(500).json({ error: "Error updating flashcard: " + err.message });
+    }
+});
+
+// Delete Flashcard by index
+router.put("/delete", async (req, res) => {
+    const { folderId, index } = req.body;
+
+    try {
+        const folder = await Folder.findById(folderId);
+        if (!folder) return res.status(404).json({ error: "Folder not found" });
+
+        if (!folder.flashcards[index])
+            return res.status(404).json({ error: "Flashcard not found" });
+
+        folder.flashcards.splice(index, 1);
+        await folder.save();
+
+        res.json({ message: "Flashcard deleted", flashcards: folder.flashcards });
+    } catch (err) {
+        res.status(500).json({ error: "Error deleting flashcard: " + err.message });
+    }
+});
+
+// Import flashcards from CSV
+router.post("/import", async (req, res) => {
+    const { folderId, cards } = req.body;
+
+    try {
+        const folder = await Folder.findById(folderId);
+        if (!folder) return res.status(404).json({ error: "Folder not found" });
+
+        folder.flashcards.push(...cards);
+        await folder.save();
+
+        res.json({ message: `${cards.length} flashcards imported`, flashcards: folder.flashcards });
+    } catch (err) {
+        res.status(500).json({ error: "Error importing flashcards: " + err.message });
+    }
+});
+
 export default router;
