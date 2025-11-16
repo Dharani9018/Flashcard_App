@@ -14,10 +14,11 @@ function FlashcardDemo({
                 <h3>Check out how it looks!!</h3> 
                 
                 <div className="flashcard-container">
-                    {/* First Card */}
                     <div 
                         className={`card ${flipped ? "flipped" : ""}`} 
                         onClick={() => setFlipped(!flipped)}
+                        onMouseEnter={() => setFlipped(true)}
+                        onMouseLeave={() => setFlipped(false)}
                     > 
                         <div className="card-inner">
                             <div className="card-front">
@@ -28,8 +29,6 @@ function FlashcardDemo({
                             </div>
                         </div>
                     </div>
-                    
-                    {/* Second Card - ReviewCard */}
                     <ReviewCard/>
                 </div>
             </div>
