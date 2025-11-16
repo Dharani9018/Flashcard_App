@@ -1,2 +1,20 @@
-What is React?,A JavaScript library for building user interfaces
-What is JSX?,A syntax extension for JavaScript
+What is a Component?,A reusable piece of UI in React
+What is a Prop?,Data passed from a parent component to a child
+What is State?,Data managed inside a component that can change over time
+What is useState?,A React Hook to store and update state
+What is useEffect?,A React Hook to run side effects (like fetching data)
+What is Virtual DOM?,A lightweight copy of the DOM used for fast UI updates
+What is npm?,A package manager for JavaScript
+What is Node.js?,A JavaScript runtime for running JS outside the browser
+What is an API?,A way for applications to communicate with each other
+What is JSON?,A lightweight text format for storing and transferring data
+What is a Function Component?,A component written as a JavaScript function
+What is a Class Component?,An older style of React component using classes
+What is a Router?,A system that lets your app switch pages without refreshing
+What is a SPA?,A single-page application that loads once and updates dynamically
+What is Fetch?,A built-in browser function to make network requests
+What is Git?,A version control system for tracking code changes
+What is GitHub?,A platform for hosting Git repositories online
+What is a Promise?,An object representing an asynchronous operation
+What is an Event Listener?,A function that responds to user actions like click
+What is CSS?,A styling language for HTML elements

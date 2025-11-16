@@ -6,14 +6,14 @@ const API = "http://localhost:5000/api";
 
 function Swipe() {
   const [user, setUser] = useState(null);
-  const [xp, setXp] = useState(0);
-  const [level, setLevel] = useState(1);
   const [flashcards, setFlashcards] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [timeLeft, setTimeLeft] = useState(5);
   const [swipeClass, setSwipeClass] = useState("");
-  const [chaos, setChaos] = useState(null);
+  const [isStarted, setIsStarted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   const timerRef = useRef(null);
   const outletContext = useOutletContext();
@@ -31,8 +31,6 @@ function Swipe() {
       if (userData) {
         const parsed = JSON.parse(userData);
         setUser(parsed);
-        setXp(parsed.xp || 0);
-        setLevel(parsed.level || 1);
       }
     } catch (error) {
       console.error("Error loading user data:", error);
@@ -78,9 +76,9 @@ function Swipe() {
     loadCards();
   }, [user?._id]);
 
-  // timer for each card
+  // Timer logic - ONLY when started and not paused
   useEffect(() => {
-    if (flashcards.length === 0) return;
+    if (!isStarted || isPaused || completed || flashcards.length === 0) return;
 
     setTimeLeft(5);
     setSwipeClass("");
@@ -91,8 +89,8 @@ function Swipe() {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current);
-          // auto wrong on timeout
-          handleWrong(true);
+          // Auto mark as wrong when time expires - CONDITION A2
+          handleTimeout();
           return 0;
         }
         return prev - 1;
@@ -100,119 +98,173 @@ function Swipe() {
     }, 1000);
 
     return () => clearInterval(timerRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex, flashcards]);
+  }, [currentIndex, isStarted, isPaused, completed, flashcards]);
 
-  // mark card as wrong on backend
-  const markWrong = async (card) => {
+ const markWrong = async (card) => {
     if (!card) return;
     try {
-      await fetch(`${API}/flashcards/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          folderId: card.folderId,
-          index: card.index,
-          status: "wrong",
-        }),
-      });
+        console.log("Marking card as not-memorized:", {
+            folderId: card.folderId,
+            index: card.index,
+            question: card.question
+        });
+        
+        const response = await fetch(`${API}/flashcards/status`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                folderId: card.folderId,
+                index: card.index,
+                status: "not-memorized",
+            }),
+        });
+        
+        // Get the response text first to see what's coming back
+        const responseText = await response.text();
+        console.log("Raw response:", responseText);
+        
+        if (!response.ok) {
+            // Try to parse as JSON, but if it fails, use the text
+            let errorMessage = responseText;
+            try {
+                const errorData = JSON.parse(responseText);
+                errorMessage = errorData.error || responseText;
+            } catch {
+                // Already have the text
+            }
+            throw new Error(`HTTP ${response.status}: ${errorMessage}`);
+        }
+        
+        const result = JSON.parse(responseText);
+        console.log("Success:", result);
+        return result;
     } catch (error) {
-      console.error("Error marking card as wrong:", error);
+        console.error("Error marking card as wrong:", error);
+        throw error; // Re-throw to handle in calling function
     }
-  };
+};
 
-  // award xp to user (calls backend)
-  const awardXp = async (amount) => {
-    if (!user?._id) return;
-    try {
-      const res = await fetch(`${API}/users/xp`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user._id, xpGain: amount }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'XP update failed');
-
-      // update local state and localStorage
-      setXp(data.xp);
-      setLevel(data.level);
-      const updatedUser = { ...user, xp: data.xp, level: data.level };
-      setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-    } catch (err) {
-      console.error("Error awarding XP:", err);
-    }
-  };
-
-  const nextCard = (skipTimerClear = true) => {
+  const nextCard = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setIsFlipped(false);
     setSwipeClass("");
-    setCurrentIndex((i) => (i + 1) % flashcards.length);
+    
+    if (currentIndex + 1 >= flashcards.length) {
+      setCompleted(true);
+    } else {
+      setCurrentIndex((i) => i + 1);
+    }
   };
 
-  const handleWrong = async (isAuto = false) => {
+  // Handle timeout - CONDITION A2
+  const handleTimeout = async () => {
     const card = flashcards[currentIndex];
     if (!card) return;
-    // animate left
-    setSwipeClass("out-left");
-    if (timerRef.current) clearInterval(timerRef.current);
-
-    // if not already marked wrong (or even if auto), mark backend
+    
+    console.log("Time limit exceeded - marking as not memorized");
     await markWrong(card);
-
-    // small delay for animation
+    setSwipeClass("out-left");
+    
     setTimeout(() => {
       nextCard();
     }, 420);
   };
 
+  // Handle wrong button click - CONDITION A1
+  const handleWrong = async () => {
+    const card = flashcards[currentIndex];
+    if (!card) return;
+    
+    console.log("User marked as wrong - marking as not memorized");
+    // Animate left
+    setSwipeClass("out-left");
+    if (timerRef.current) clearInterval(timerRef.current);
+
+    // Mark as not memorized - CONDITION A1
+    await markWrong(card);
+
+    // Small delay for animation
+    setTimeout(() => {
+      nextCard();
+    }, 420);
+  };
+
+  // Handle right - DO NOT mark as wrong
   const handleRight = async () => {
     const card = flashcards[currentIndex];
     if (!card) return;
-    // animate right
+    
+    // Animate right - NO MARKING AS WRONG
     setSwipeClass("out-right");
     if (timerRef.current) clearInterval(timerRef.current);
 
-    // award base XP
-    let gain = 10;
-
-    // small chaos chance: 15% chance for bonus XP and visual
-    if (Math.random() < 0.15) {
-      const bonus = 20 + Math.floor(Math.random() * 31); // 20-50 bonus
-      gain += bonus;
-      setChaos({ type: "bonus", amount: bonus });
-      // clear chaos tag after 2s
-      setTimeout(() => setChaos(null), 2000);
-    }
-
-    await awardXp(gain);
-
-    setTimeout(() => nextCard(), 420);
+    setTimeout(() => {
+      nextCard();
+    }, 420);
   };
 
   const toggleFlip = () => {
-    setIsFlipped((s) => !s);
+    if (isStarted && !isPaused && !completed) {
+      setIsFlipped((s) => !s);
+    }
   };
 
-  // keyboard handlers for J (left/wrong) and L (right/memorized)
+  const startReview = () => {
+    setIsStarted(true);
+    setCompleted(false);
+    setCurrentIndex(0);
+    setIsPaused(false);
+  };
+
+  const startOver = () => {
+    setIsStarted(false);
+    setCompleted(false);
+    setCurrentIndex(0);
+    setIsPaused(false);
+    setIsFlipped(false);
+    setSwipeClass("");
+    if (timerRef.current) clearInterval(timerRef.current);
+  };
+
+  const togglePause = () => {
+    if (!isStarted || completed) return;
+    setIsPaused(!isPaused);
+    if (isPaused) {
+      // Resume timer
+      setTimeLeft(5);
+    } else {
+      // Pause timer
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
+  };
+
+  const endReview = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setCompleted(true);
+    setIsStarted(false);
+  };
+
+  // Keyboard handlers
   useEffect(() => {
     const onKey = (e) => {
+      if (!isStarted || isPaused || completed) return;
+      
       if (e.key === "j" || e.key === "J") {
-        handleWrong(false);
+        handleWrong(); // CONDITION A1
       } else if (e.key === "l" || e.key === "L") {
-        handleRight();
+        handleRight(); // No marking as wrong
       } else if (e.key === " ") {
-        // space to flip
         e.preventDefault();
         toggleFlip();
+      } else if (e.key === "p" || e.key === "P") {
+        e.preventDefault();
+        togglePause();
       }
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [flashcards, currentIndex, user, xp, level]);
+  }, [isStarted, isPaused, completed, flashcards, currentIndex]);
 
   if (!user) {
     return (
@@ -234,39 +286,86 @@ function Swipe() {
 
   return (
     <div className="review-container">
-      <div className="card-counter-top">
-        <div className="card-count">Card {currentIndex + 1} of {flashcards.length}</div>
-        <div className="timer">{timeLeft}s left</div>
-      </div>
-
-      <div className="review-card-wrapper">
-        <div
-          role="button"
-          tabIndex={0}
-          className={`review-card modern ${isFlipped ? "flipped" : ""} ${swipeClass}`}
-          onClick={toggleFlip}
-        >
-          <div className="review-card-inner">
-            <div className="review-card-front">
-              <p className="card-question">{currentCard.question}</p>
-            </div>
-            <div className="review-card-back">
-              <p className="card-answer">{currentCard.answer}</p>
-            </div>
+      {!isStarted ? (
+        <div className="start-screen">
+          <h2>Review Mode</h2>
+          <p>You have {flashcards.length} cards to review</p>
+          <button className="start-btn" onClick={startReview}>
+            Start Review
+          </button>
+        </div>
+      ) : completed ? (
+        <div className="completed-screen">
+          <h2>Review Completed!</h2>
+          <p>You've reviewed all {flashcards.length} cards</p>
+          <div className="completed-buttons">
+            <button className="start-over-btn" onClick={startOver}>
+              Start Over
+            </button>
           </div>
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="card-counter-top">
+            <div className="card-count">Card {currentIndex + 1} of {flashcards.length}</div>
+            <div className="timer">{timeLeft}s left</div>
+            <div className="pause-indicator">{isPaused ? "⏸ Paused" : "▶ Playing"}</div>
+          </div>
 
-      <div className="review-controls modern-controls">
-        <button className="control-btn" onClick={() => { setCurrentIndex((i) => i === 0 ? flashcards.length - 1 : i - 1); }}>⬅️ Prev</button>
-        <button className="control-btn wrong" onClick={() => handleWrong(false)}><span></span> Wrong (J)</button>
-        <button className="control-btn right" onClick={() => handleRight()}><span></span> Memorized (L)</button>
-        <button className="control-btn" onClick={() => { setCurrentIndex((i) => (i + 1) % flashcards.length); }}>Next ➡️</button>
-      </div>
+          <div className="review-card-wrapper">
+            <div
+              role="button"
+              tabIndex={0}
+              className={`review-card modern ${isFlipped ? "flipped" : ""} ${swipeClass}`}
+              onClick={toggleFlip}
+            >
+              <div className="review-card-inner">
+                <div className="review-card-front">
+                  <p className="card-question">{currentCard?.question}</p>
+                </div>
+                <div className="review-card-back">
+                  <p className="card-answer">{currentCard?.answer}</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <div className="hint modern-hint">
-        <span>Tip:</span> Tap card to flip. J = wrong, L = memorized, Space = flip.
-      </div>
+          <div className="review-controls modern-controls">
+            <button className="control-btn" onClick={() => { 
+              if (currentIndex > 0) setCurrentIndex(i => i - 1); 
+            }}>⬅️ Prev</button>
+            
+            <button className="control-btn wrong" onClick={handleWrong}>
+              <span></span> Wrong (J)
+            </button>
+            
+            <button className="control-btn pause" onClick={togglePause}>
+              {isPaused ? "▶ Resume (P)" : "⏸ Pause (P)"}
+            </button>
+            
+            <button className="control-btn right" onClick={handleRight}>
+              <span></span> Memorized (L)
+            </button>
+            
+            <button className="control-btn" onClick={() => { 
+              if (currentIndex < flashcards.length - 1) setCurrentIndex(i => i + 1); 
+            }}>Next ➡️</button>
+          </div>
+
+          <div className="review-meta-controls">
+            <button className="end-btn" onClick={endReview}>
+              End Review
+            </button>
+            <button className="start-over-btn" onClick={startOver}>
+              Start Over
+            </button>
+          </div>
+
+          <div className="hint modern-hint">
+            <span>Tip:</span> Tap card to flip. J = wrong, L = memorized, Space = flip, P = pause.
+          </div>
+        </>
+      )}
     </div>
   );
 }
