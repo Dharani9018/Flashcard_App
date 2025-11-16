@@ -1,200 +1,157 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/reviewMode.css";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 
 const API = "http://localhost:5000/api";
 
 function ReviewMode() {
-  const [user, setUser] = useState(null);
-  const [flashcards, setFlashcards] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
+	const [user, setUser] = useState(null);
+	const [folders, setFolders] = useState([]);
+	const [selectedFolders, setSelectedFolders] = useState([]);
+	const [step, setStep] = useState(0);
+	const [loading, setLoading] = useState(true);
 
-  const [userAnswer, setUserAnswer] = useState("");
-  const [feedback, setFeedback] = useState(null); // correct | wrong | timeout
-  const [timeLeft, setTimeLeft] = useState(15);
+	const outletContext = useOutletContext();
+	const setPageTitle = outletContext?.setPageTitle || (() => {});
+	const navigate = useNavigate();
 
-  const timerRef = useRef(null);
-  const outletContext = useOutletContext();
-  const setPageTitle = outletContext?.setPageTitle || (() => {});
+	// Load user
+	useEffect(() => {
+		setPageTitle("Review Mode");
+		try {
+			const userData = localStorage.getItem("user");
+			if (userData) setUser(JSON.parse(userData));
+		} catch (error) {
+			console.error("Error loading user:", error);
+		}
+	}, []);
 
-  useEffect(() => {
-    setPageTitle("Review Mode");
-  }, [setPageTitle]);
+	// Load folders when user changes (FIXED)
+	useEffect(() => {
+		if (!user) return;
 
-  // Load user
-  useEffect(() => {
-    const data = localStorage.getItem("user");
-    if (data) setUser(JSON.parse(data));
-  }, []);
+		async function loadFolders() {
+			try {
+				setLoading(true);
+				const res = await fetch(`${API}/folders/${user._id}`);
+				if (!res.ok) throw new Error("Failed to fetch folders");
+				const data = await res.json();
+				console.log("Loaded folders:", data);
+				setFolders(data || []);
+			} catch (err) {
+				console.error("Error loading folders:", err);
+				setFolders([]);
+			} finally {
+				setLoading(false);
+			}
+		}
 
-  // Load flashcards
-  useEffect(() => {
-    if (!user?._id) return;
+		loadFolders();
+	}, [user]); // FIXED HERE
 
-    async function loadCards() {
-      try {
-        const res = await fetch(`${API}/folders/${user._id}`);
-        const data = await res.json();
+	// Select folder
+	const toggleFolder = (id) => {
+		setSelectedFolders((prev) =>
+			prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
+		);
+	};
 
-        const merged = data.flatMap(folder =>
-            folder.flashcards.map((card, idx) => ({
-              ...card,
-              folderId: folder._id,
-              index: idx,
-            }))
-        );
+	// Go to next step
+	const proceedToMode = () => {
+		if (selectedFolders.length === 0) return;
+		setStep(1);
+	};
 
-        setFlashcards(merged);
-      } catch (err) {
-        console.error(err);
-      }
-    }
+	// Choose mode
+	const handleModeSelect = (mode) => {
+    sessionStorage.setItem("reviewFolders", JSON.stringify(selectedFolders));
+    if (mode === "swipe") navigate("/login/home/review/swipe");
+    else if (mode === "typing") navigate("/login/home/review/typing");
+};
+	// STEP 0 — Folder selection
+	if (step === 0) {
+		return (
+			<div className="review-container">
+				<h2 className="review-title">Select Folders to Review</h2>
 
-    loadCards();
-  }, [user?._id]);
+				{loading ? (
+					<p>Loading folders...</p>
+				) : folders.length === 0 ? (
+					<div>
+						<p>No folders found.</p>
+						<p className="hint">Create folders in "My Flashcards" first!</p>
+					</div>
+				) : (
+					<>
+						<div className="folder-select-list">
+							{folders.map((folder) => (
+								<label
+									key={folder._id}
+									className={`folder-select-item${
+										selectedFolders.includes(folder._id) ? " selected" : ""
+									}`}
+								>
+									<input
+										type="checkbox"
+										checked={selectedFolders.includes(folder._id)}
+										onChange={() => toggleFolder(folder._id)}
+									/>
+									<span>
+										{folder.name} ({folder.flashcards?.length || 0} cards)
+									</span>
+								</label>
+							))}
+						</div>
 
-  // Timer logic
-  useEffect(() => {
-    if (!flashcards.length) return;
+						<button
+							className="proceed-btn"
+							disabled={selectedFolders.length === 0}
+							onClick={proceedToMode}
+						>
+							Next: Choose Mode ({selectedFolders.length} folder
+							{selectedFolders.length !== 1 ? "s" : ""} selected)
+						</button>
+					</>
+				)}
+			</div>
+		);
+	}
 
-    setIsFlipped(false);
-    setFeedback(null);
-    setUserAnswer("");
-    setTimeLeft(15);
+	// STEP 1 — Mode selection
+	if (step === 1) {
+		const totalCards = folders
+			.filter((folder) => selectedFolders.includes(folder._id))
+			.reduce((sum, folder) => sum + (folder.flashcards?.length || 0), 0);
 
-    if (timerRef.current) clearInterval(timerRef.current);
+		return (
+			<div className="review-container">
+				<h2 className="review-title">Choose Review Mode</h2>
 
-    timerRef.current = setInterval(() => {
-      setTimeLeft(sec => {
-        if (sec <= 1) {
-          clearInterval(timerRef.current);
-          markWrong(flashcards[currentIndex]);
-          setFeedback("timeout");
-          setIsFlipped(true);
-          return 0;
-        }
-        return sec - 1;
-      });
-    }, 1000);
+				<p className="selection-info">
+					Selected {selectedFolders.length} folder
+					{selectedFolders.length !== 1 ? "s" : ""} • {totalCards} cards total
+				</p>
 
-    return () => clearInterval(timerRef.current);
-  }, [currentIndex]);
+				<div className="mode-select-list">
+					<button className="mode-btn swipe-mode" onClick={() => handleModeSelect("swipe")}>
+						<div className="mode-title">Swipe Mode</div>
+						<div className="mode-desc">Flip cards and swipe to answer</div>
+					</button>
 
-  const markWrong = async (card) => {
-    try {
-      await fetch(`${API}/flashcards/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          folderId: card.folderId,
-          index: card.index,
-          status: "not-memorized",
-        }),
-      });
-    } catch (err) {
-      console.error("Error marking wrong", err);
-    }
-  };
+					<button className="mode-btn typing-mode" onClick={() => handleModeSelect("typing")}>
+						<div className="mode-title">Typing Mode</div>
+						<div className="mode-desc">Type answers to test recall</div>
+					</button>
+				</div>
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    clearInterval(timerRef.current);
+				<button className="back-btn" onClick={() => setStep(0)}>
+					⬅ Back to Folder Selection
+				</button>
+			</div>
+		);
+	}
 
-    const card = flashcards[currentIndex];
-    const correct = card.answer.trim().toLowerCase();
-    const typed = userAnswer.trim().toLowerCase();
-
-    if (typed === correct) {
-      setFeedback("correct");
-    } else {
-      setFeedback("wrong");
-      await markWrong(card);
-    }
-
-    setIsFlipped(true);
-  };
-
-  const nextCard = () => {
-    setIsFlipped(false);
-    setFeedback(null);
-    setUserAnswer("");
-    setCurrentIndex(i => (i + 1 < flashcards.length ? i + 1 : 0));
-  };
-
-  if (!user) return <p>Loading...</p>;
-  if (!flashcards.length) return <p>No flashcards found.</p>;
-
-  const card = flashcards[currentIndex];
-
-  return (
-      <div className="review-container">
-
-        <div className="card-counter-top">
-          <div>Card {currentIndex + 1} of {flashcards.length}</div>
-          <div className="timer">Time left: {timeLeft}s</div>
-        </div>
-
-        {/* YOUR EXACT CARD UI */}
-        <div className={`Rev-card ${isFlipped ? "flipped" : ""}`}>
-          <div className="inner">
-
-            {/* FRONT SIDE */}
-            <div className="front">
-              <div className="card-content">
-                <p className="question">{card.question}</p>
-
-                <form onSubmit={handleSubmit}>
-                <textarea
-                    className="answer-input"
-                    value={userAnswer}
-                    onChange={(e) => setUserAnswer(e.target.value)}
-                    placeholder="Type your answer..."
-                    rows="3"
-                    disabled={feedback}
-                />
-
-                  {!feedback && (
-                      <button type="submit" className="submit-btn">
-                        Submit Answer
-                      </button>
-                  )}
-                </form>
-              </div>
-            </div>
-
-            {/* BACK SIDE */}
-            <div className="back">
-              <div className="card-content">
-
-                <p className="answer-label">Your Answer:</p>
-                <p className="user-answer">"{userAnswer || "—"}"</p>
-
-                <p className="answer-label">Correct Answer:</p>
-                <p className="answer-text">{card.answer}</p>
-
-                {feedback === "correct" && (
-                    <p className="feedback-correct">✔ Correct!</p>
-                )}
-                {feedback === "wrong" && (
-                    <p className="feedback-wrong">✖ Wrong</p>
-                )}
-                {feedback === "timeout" && (
-                    <p className="feedback-timeout">⏱ Time’s Up</p>
-                )}
-
-                <button onClick={nextCard} className="back-btn">
-                  Next →
-                </button>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-  );
+	return null;
 }
 
 export default ReviewMode;

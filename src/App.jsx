@@ -15,7 +15,9 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import LoggedInLayout from "./components/LoggedInLayout.jsx";
 import Settings from "./pages/Settings.jsx";
 import { useState, useEffect } from "react";
-import About from "./pages/about.jsx"
+import About from "./pages/about.jsx";
+import Swipe from "./pages/swipe.jsx";
+import Typing from "./pages/typing-mode.jsx";
 
 function App() {
     const [isDark, setIsDark] = useState(false);
@@ -87,15 +89,14 @@ function App() {
                         }
                     >
                         {/* Nested routes accessible only after login */}
-                        <Route
-                            index
-                            element={<Home />}
-                        />
-                        <Route
-                            path="my"
-                            element={<MyFlashcards />}
-                        />
+                        <Route index element={<Home />} />
+                        <Route path="my" element={<MyFlashcards />} />
+                        
+                        {/* FIXED: Removed nested Routes component */}
                         <Route path="review" element={<ReviewMode />} />
+                        <Route path="review/swipe" element={<Swipe />} />
+                        <Route path="review/typing" element={<Typing />} />
+                        
                         <Route path="not_memorized" element={<NotMemorized />} />
                         <Route path="settings" element={<Settings />} />
                         <Route path="about" element={<About />} />
