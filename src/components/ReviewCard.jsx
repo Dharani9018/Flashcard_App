@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../css/ReviewCard.css";
 
-function ReviewCard({ question = "is life worth living tho", answer = "nope not at all lorem" }) {
+function ReviewCard({ question = "What does HTML stand for?", answer = "HyperText Markup Language" }) {
     const [flipped, setFlipped] = useState(false);
     const [userAnswer, setUserAnswer] = useState("");
 

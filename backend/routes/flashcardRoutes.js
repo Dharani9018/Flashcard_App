@@ -46,7 +46,7 @@ router.put("/status", async (req, res) => {
 });
 
 // =====================
-// GET NOT-MEMORIZED CARDS (FIXED)
+// GET NOT-MEMORIZED CARDS 
 // =====================
 router.get("/not-memorized/:userId", async (req, res) => {
     try {
