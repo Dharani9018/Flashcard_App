@@ -15,10 +15,10 @@
 
   
 .review-title {
-  color: var(--text-primary);
-  margin-bottom: 1.8rem;
-  font-size: 1.9rem;
-  font-weight: 700;
+  color: var(--text-primary) !important;
+  margin-bottom: 1.8rem !important;
+  font-size: 1.9rem !important;
+  font-weight: 700 !important;
 }
 
 /* Selection info */
@@ -45,24 +45,23 @@
   padding: 1rem 1.2rem;
 
   /* CARD FIX */
-  background: var(--side-bar);
+  background: var(--card-back);
   border: 2px solid rgba(108, 63, 167, 0.17);
   border-radius: 14px;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  color:var(--card-back-text);
 }
 
 
 .folder-select-item:hover {
   border-color: #6c3fa7;
-  background: rgba(108, 63, 167, 0.06);
 }
 
 
 .folder-select-item.selected {
   border-color: #6c3fa7;
-  background: rgba(108, 63, 167, 0.12);
 }
 
 

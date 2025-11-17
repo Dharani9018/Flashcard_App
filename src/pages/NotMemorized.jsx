@@ -96,7 +96,7 @@ function NotMemorized() {
     return (
         <div className="not-memorized-container">
             <div className="not-memorized-header">
-                <h2>Not Memorized Cards</h2>
+                
 
                 {notMemorizedCards.length > 0 && (
                     <button className="clear-all-btn" onClick={clearAllCards}>
@@ -113,7 +113,7 @@ function NotMemorized() {
                         <div key={`${card.folderId}-${card.index}`} className="not-memorized-card">
                             <div className="card-content">
                                 <div className="card-folder">
-                                    <strong>Folder:</strong> {card.folderName}
+                                    <strong></strong> {card.folderName}
                                 </div>
                                 <div className="card-question">
                                     <strong>Q:</strong> {card.question}

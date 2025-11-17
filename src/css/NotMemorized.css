@@ -76,28 +76,22 @@
 .card-question {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--card-front-text);
     margin-bottom: 1rem;
     line-height: 1.5;
     background: none;
 }
 
-.card-question strong {
-    color: var(--accent-color);
-    background: none;
-}
+
 
 .card-answer {
     font-size: 1rem;
-    color: var(--text-secondary);
+    color: var(--card-front-text);
     line-height: 1.5;
     background: none;
 }
 
-.card-answer strong {
-    color: var(--accent-color);
-    background: none;
-}
+
 
 .delete-card-btn {
     background: none;
@@ -190,4 +184,12 @@
 .not-memorized-container.loading {
     opacity: 0.7;
     pointer-events: none;
+}
+
+.card-folder
+{
+    background:none;
+    border-radius: 1px;
+    color:var(--text-secondary);
+    opacity: 0.5;
 }
