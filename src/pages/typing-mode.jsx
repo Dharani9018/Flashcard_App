@@ -191,8 +191,8 @@ function Typing() {
     <div className="typing-review-container">
       {!isStarted ? (
         <div className="start-screen">
-          <h2>Typing Mode</h2>
-          <p>You have {flashcards.length} cards to review</p>
+          <h2 className="name">Typing Mode</h2>
+          <p className="sentence">You have {flashcards.length} cards to review</p>
           <button className="start-btn" onClick={startReview}>
             Start Review
           </button>

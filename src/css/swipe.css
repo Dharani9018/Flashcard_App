@@ -233,6 +233,20 @@
   }
 }
 
+.name{
+  font-size: 2rem;
+  margin: 1.5rem;
+}
+
+
+.sentence
+{
+  color: var(--text-primary);
+  margin-bottom: 1.8rem ;
+  font-size: 1.5rem ;
+  font-weight: 700 ;
+}
+
 .end-btn{
   padding: 12px 22px;
   border-radius: 8px;

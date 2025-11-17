@@ -288,8 +288,8 @@ function Swipe() {
     <div className="review-container">
       {!isStarted ? (
         <div className="start-screen">
-          <h2>Review Mode</h2>
-          <p>You have {flashcards.length} cards to review</p>
+          <h2 className="name">Review Mode</h2>
+          <p className="sentence">You have {flashcards.length} cards to review</p>
           <button className="start-btn" onClick={startReview}>
             Start Review
           </button>
