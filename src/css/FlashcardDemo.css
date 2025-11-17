@@ -127,6 +127,7 @@ h4 {
     .card,
     .flashcard-container .Rev-card {
         width: 450px;
+        background: none;
     }
 }
 
@@ -134,6 +135,7 @@ h4 {
     .card,
     .flashcard-container .Rev-card {
         width: 400px;
+        background: none;
     }
 }
 
@@ -141,6 +143,7 @@ h4 {
     .flashcard-container {
         flex-wrap: wrap;
         justify-content: center;
+        background: none;
     }
 }
 
@@ -160,6 +163,7 @@ h4 {
     .flashcard-container .Rev-card {
         width: 350px;
         height: 250px;
+        background: none;
     }
     
     .card-front,
@@ -178,9 +182,11 @@ h4 {
     .flashcard-container .Rev-card {
         width: 300px;
         height: 200px;
+        background: none;
     }
     
     .flashcard-demo {
         padding: 20px 10px;
+        background: none;
     }
 }

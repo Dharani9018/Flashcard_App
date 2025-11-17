@@ -6,12 +6,13 @@
 }
 
 h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Georgia', serif;
     text-align: center;
-    font-weight: 0;
-    color: transparent !important;
+    font-weight: 300;
+    color: #3b1f47 !important;
     font-size: 5rem;
-    margin: 0 0 1rem 20px;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
     background: none;
     -webkit-text-stroke: 0.5px var(--text-primary);
     line-height:0.5;

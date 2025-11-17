@@ -16,7 +16,6 @@ function ReviewCard({ question = "is life worth living tho", answer = "nope not 
     };
 
     return (
-        <div className="review-container">
             <div className={`Rev-card ${flipped ? "flipped" : ""}`}>
                 
                 <div className="inner">
@@ -53,7 +52,6 @@ function ReviewCard({ question = "is life worth living tho", answer = "nope not 
                     </div>
                 </div>
             </div>
-        </div>
     );
 }
 
