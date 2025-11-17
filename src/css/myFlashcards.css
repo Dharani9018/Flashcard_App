@@ -152,10 +152,10 @@
 
 /* --- FORM SECTION --- */
 .form-container {
-    width: 400px;
+    width: 450px;
+    height:auto;
     background: var(--card-front);
     border-radius: 25px;
-    height: auto;
     margin: 0 auto;
     transition: transform 0.35s ease;
     padding: 1rem 0;
@@ -175,6 +175,17 @@
     color: white;
 }
 
+.input-area{
+    width: 70%;
+    padding: 0.7rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background-color: #262626;
+    color: white;
+    outline: none;
+    margin-bottom: 1rem;
+}
+
 .add-card {
     display: flex;
     justify-content: center;
@@ -189,7 +200,11 @@
     transform: translateX(250px);
 }
 
+.btns{
+    background: transparent;
+}
 .btns button {
+    width: 30%;
     margin: 6px;
     padding: 8px 14px;
     border: none;

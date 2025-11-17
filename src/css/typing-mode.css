@@ -239,3 +239,20 @@
     font-size: 1.15rem;
   }
 }
+
+.start-btn {
+  padding: 12.5px 30px;
+  border: 0;
+  border-radius: 100px;
+  background-color: #2ba8fb;
+  color: #ffffff;
+  font-weight: Bold;
+  transition: all 0.5s;
+}
+.start-btn:hover {
+  background-color: #13364e;
+}
+
+.typing-meta-controls{
+  background: transparent;
+}

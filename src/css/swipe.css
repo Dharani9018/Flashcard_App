@@ -232,3 +232,40 @@
     font-size: 16px;
   }
 }
+
+.end-btn{
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  background:#1f2937;
+  color: var(--button-text);
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(180,140,255,0.07);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.end-btn:hover{
+  background: #02073e;
+}
+
+.start-over-btn{
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  margin: 18px;
+  background:#1f2937;
+  color: var(--button-text);
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(180,140,255,0.07);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.start-over-btn:hover{
+  background: #02073e;
+}
+
+.review-meta-controls{
+  background: transparent;
+}

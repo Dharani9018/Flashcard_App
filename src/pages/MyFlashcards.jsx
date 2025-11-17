@@ -372,7 +372,7 @@ function MyFlashcards() {
           <div className="form-container">
             <h3>Create New Folder</h3>
 
-            <input
+            <input className="input-area"
               type="text"
               placeholder="Enter folder name"
               value={newFolderName}
