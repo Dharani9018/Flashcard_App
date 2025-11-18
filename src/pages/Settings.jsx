@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect import
+import React, { useState, useEffect } from "react"; 
 import "../css/settings.css";
 import { useOutletContext } from "react-router-dom";
 
@@ -10,7 +10,7 @@ function Settings() {
     
     // Set page title
     useEffect(() => {
-        setPageTitle("Settings"); // Changed from "Not memorized" to "Settings"
+        setPageTitle("Settings");
     }, [setPageTitle]);
 
     // Get user from localStorage safely
@@ -162,7 +162,6 @@ function Settings() {
         }
     };
 
-    // ⭐ FIX: Prevent crash when user is null — show loading
     if (!user) {
         return <h2 className="settings-title">Loading...</h2>;
     }

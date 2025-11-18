@@ -1,6 +1,5 @@
 @import url('../Variables.css');
 
-/* The real sidebar wrapper (common in react-sidebar examples) */
 .nav-menu {
     background: var(--side-bar);
     width: 250px;
@@ -9,15 +8,13 @@
     top: 0;
     left: 0;
 
-    z-index: 99999 !important;   /* <-- FIX: Sidebar always on top */
+    z-index: 99999 !important;   
 }
 
-/* Sidebar links styling */
 .nav-text {
     background: none !important;
 }
 
-/* Optional: remove background leaking */
 .nav-menu-items {
     width: 100%;
     padding: 0;

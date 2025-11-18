@@ -55,7 +55,7 @@ function Swipe() {
         const res = await fetch(`${API}/folders/${user._id}`);
         const data = await res.json();
 
-        // Only include flashcards from selected folders (robust ID comparison)
+        // Only include flashcards from selected folders 
         const filtered = data.filter(folder =>
           selectedFolderIds.some(selId => String(selId) === String(folder._id))
         );
@@ -89,7 +89,7 @@ function Swipe() {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current);
-          // Auto mark as wrong when time expires - CONDITION A2
+          // Auto mark as wrong when time expires 
           handleTimeout();
           return 0;
         }

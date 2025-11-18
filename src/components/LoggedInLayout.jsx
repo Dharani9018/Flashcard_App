@@ -19,7 +19,7 @@ function LoggedInLayout({ iconcolor, themeIcon, color1, color2, handleThemeChang
             else if (path.includes("/settings")) setPageTitle("Settings");
             else setPageTitle("Home");
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, [location.pathname]);
 
     const [sidebarOpen, setSidebarOpen] = React.useState(false);

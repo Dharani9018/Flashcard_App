@@ -3,9 +3,7 @@ import Folder from "../models/Folder.js";
 
 const router = express.Router();
 
-// =====================
-// UPDATE FLASHCARD STATUS (WITH CONVERSION)
-// =====================
+// UPDATE FLASHCARD STATUS 
 router.put("/status", async (req, res) => {
     try {
         const { folderId, index, status } = req.body;
@@ -45,9 +43,7 @@ router.put("/status", async (req, res) => {
     }
 });
 
-// =====================
 // GET NOT-MEMORIZED CARDS 
-// =====================
 router.get("/not-memorized/:userId", async (req, res) => {
     try {
         const folders = await Folder.find({ userId: req.params.userId });
@@ -75,7 +71,6 @@ router.get("/not-memorized/:userId", async (req, res) => {
     }
 });
 
-// ADD these below your existing handlers:
 
 // Add Flashcard
 router.post("/add", async (req, res) => {

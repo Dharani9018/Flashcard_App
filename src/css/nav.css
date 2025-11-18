@@ -64,9 +64,6 @@
     font-size: 2rem;
 }
 
-/* ----------------------------- */
-/* ⭐ FINAL IMPORTANT FIX BELOW  */
-/* ----------------------------- */
 
 .nav-menu,
 .nav-menu.active {
@@ -90,7 +87,6 @@
     transition: 350ms;
 }
 
-/* ----------------------------- */
 
 .nav-text {
     display: flex;

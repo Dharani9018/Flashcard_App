@@ -317,7 +317,6 @@ h3 {
     transform: scale(1.05);
 }
 
-/* FAB WRAPPER (BOTTOM LEFT) */
 .fab-wrapper {
     position: fixed;
     bottom: 2rem;
@@ -331,7 +330,6 @@ h3 {
     background:none;
 }
 
-/* MAIN BACK BUTTON CIRCLE */
 .fab-main {
     width: 55px;
     height: 55px;
@@ -373,7 +371,6 @@ h3 {
     background: none;
 }
 
-/* CIRCLE ICONS */
 .fab-icon {
     width: 45px;
     height: 45px;
