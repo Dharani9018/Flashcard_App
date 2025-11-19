@@ -1,5 +1,3 @@
-// src/components/Navigation.jsx
-import React from "react";
 import { Link } from "react-router-dom";
 import "../css/nav.css"
 import "../css/myFlashcards.css"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../css/reviewMode.css";
 import { useOutletContext, useNavigate } from "react-router-dom";
 
@@ -15,7 +15,6 @@ function ReviewMode() {
 	const setPageTitle = outletContext?.setPageTitle || (() => {});
 	const navigate = useNavigate();
 
-	// Load user
 	useEffect(() => {
 		setPageTitle("Review Mode");
 		try {
@@ -26,7 +25,6 @@ function ReviewMode() {
 		}
 	}, []);
 
-	// Load folders when user changes (FIXED)
 	useEffect(() => {
 		if (!user) return;
 
@@ -47,77 +45,77 @@ function ReviewMode() {
 		}
 
 		loadFolders();
-	}, [user]); // FIXED HERE
+	}, [user]);
 
-	// Select folder
 	const toggleFolder = (id) => {
 		setSelectedFolders((prev) =>
 			prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
 		);
 	};
 
-	// Go to next step
 	const proceedToMode = () => {
 		if (selectedFolders.length === 0) return;
 		setStep(1);
 	};
 
-	// Choose mode
 	const handleModeSelect = (mode) => {
     sessionStorage.setItem("reviewFolders", JSON.stringify(selectedFolders));
     if (mode === "swipe") navigate("/login/home/review/swipe");
     else if (mode === "typing") navigate("/login/home/review/typing");
 };
-	// STEP 0 — Folder selection
-	if (step === 0) {
-		return (
-			<div className="review-container">
-				<h2 className="review-title">Select Folders to Review</h2>
 
-				{loading ? (
-					<p>Loading folders...</p>
-				) : folders.length === 0 ? (
-					<div>
-						<p>No folders found.</p>
-						<p className="hint">Create folders in "My Flashcards" first!</p>
-					</div>
-				) : (
-					<>
-						<div className="folder-select-list">
-							{folders.map((folder) => (
-								<label
-									key={folder._id}
-									className={`folder-select-item${
-										selectedFolders.includes(folder._id) ? " selected" : ""
-									}`}
-								>
-									<input
-										type="checkbox"
-										checked={selectedFolders.includes(folder._id)}
-										onChange={() => toggleFolder(folder._id)}
-									/>
-									<span>
-										{folder.name} ({folder.flashcards?.length || 0} cards)
-									</span>
-								</label>
-							))}
-						</div>
+if (step === 0) {
+  return (
+    <div className="review-container">
+      <div className="review-content">
+        <h2 className="review-title">Select Folders to Review</h2>
 
-						<button
-							className="proceed-btn"
-							disabled={selectedFolders.length === 0}
-							onClick={proceedToMode}
-						>
-							Next: Choose Mode ({selectedFolders.length} folder
-							{selectedFolders.length !== 1 ? "s" : ""} selected)
-						</button>
-					</>
-				)}
-			</div>
-		);
-	}
+        {loading ? (
+          <p>Loading folders...</p>
+        ) : folders.length === 0 ? (
+          <div>
+            <p>No folders found.</p>
+            <p className="hint">Create folders in "My Flashcards" first!</p>
+          </div>
+        ) : (
+          <>
+            <div className="folder-select-list">
+              {folders.map((folder) => (
+                <label
+                  key={folder._id}
+                  className={`folder-select-item${
+                    selectedFolders.includes(folder._id) ? " selected" : ""
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedFolders.includes(folder._id)}
+                    onChange={() => toggleFolder(folder._id)}
+                  />
+                  <span>
+                    {folder.name} ({folder.flashcards?.length || 0} cards)
+                  </span>
+                </label>
+              ))}
+            </div>
 
-	// STEP 1 — Mode selection
+            <div className="button-container">
+              <button
+                className="proceed-btn"
+                disabled={selectedFolders.length === 0}
+                onClick={proceedToMode}
+              >
+                Next ({selectedFolders.length} folder
+                {selectedFolders.length !== 1 ? "s" : ""} selected)
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+	
 	if (step === 1) {
 		const totalCards = folders
 			.filter((folder) => selectedFolders.includes(folder._id))

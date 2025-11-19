@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 import "../css/swipe.css";
 import { useOutletContext } from "react-router-dom";
 
@@ -19,12 +19,10 @@ function Swipe() {
   const outletContext = useOutletContext();
   const setPageTitle = outletContext?.setPageTitle || (() => {});
 
-  // Set page title
   useEffect(() => {
     setPageTitle("Review Mode");
   }, [setPageTitle]);
 
-  // Load user safely
   useEffect(() => {
     try {
       const userData = localStorage.getItem("user");
@@ -37,7 +35,6 @@ function Swipe() {
     }
   }, []);
 
-  // Load flashcards from selected folders only
   useEffect(() => {
     if (!user?._id) return;
 
@@ -55,7 +52,6 @@ function Swipe() {
         const res = await fetch(`${API}/folders/${user._id}`);
         const data = await res.json();
 
-        // Only include flashcards from selected folders 
         const filtered = data.filter(folder =>
           selectedFolderIds.some(selId => String(selId) === String(folder._id))
         );
@@ -76,7 +72,6 @@ function Swipe() {
     loadCards();
   }, [user?._id]);
 
-  // Timer logic - ONLY when started and not paused
   useEffect(() => {
     if (!isStarted || isPaused || completed || flashcards.length === 0) return;
 
@@ -89,7 +84,6 @@ function Swipe() {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timerRef.current);
-          // Auto mark as wrong when time expires 
           handleTimeout();
           return 0;
         }
@@ -100,7 +94,7 @@ function Swipe() {
     return () => clearInterval(timerRef.current);
   }, [currentIndex, isStarted, isPaused, completed, flashcards]);
 
- const markWrong = async (card) => {
+  const markWrong = async (card) => {
     if (!card) return;
     try {
         console.log("Marking card as not-memorized:", {
@@ -119,18 +113,15 @@ function Swipe() {
             }),
         });
         
-        // Get the response text first to see what's coming back
         const responseText = await response.text();
         console.log("Raw response:", responseText);
         
         if (!response.ok) {
-            // Try to parse as JSON, but if it fails, use the text
             let errorMessage = responseText;
             try {
                 const errorData = JSON.parse(responseText);
                 errorMessage = errorData.error || responseText;
             } catch {
-                // Already have the text
             }
             throw new Error(`HTTP ${response.status}: ${errorMessage}`);
         }
@@ -140,7 +131,7 @@ function Swipe() {
         return result;
     } catch (error) {
         console.error("Error marking card as wrong:", error);
-        throw error; // Re-throw to handle in calling function
+        throw error;
     }
 };
 
@@ -156,7 +147,6 @@ function Swipe() {
     }
   };
 
-  // Handle timeout - CONDITION A2
   const handleTimeout = async () => {
     const card = flashcards[currentIndex];
     if (!card) return;
@@ -170,31 +160,25 @@ function Swipe() {
     }, 420);
   };
 
-  // Handle wrong button click - CONDITION A1
   const handleWrong = async () => {
     const card = flashcards[currentIndex];
     if (!card) return;
     
     console.log("User marked as wrong - marking as not memorized");
-    // Animate left
     setSwipeClass("out-left");
     if (timerRef.current) clearInterval(timerRef.current);
 
-    // Mark as not memorized - CONDITION A1
     await markWrong(card);
 
-    // Small delay for animation
     setTimeout(() => {
       nextCard();
     }, 420);
   };
 
-  // Handle right - DO NOT mark as wrong
   const handleRight = async () => {
     const card = flashcards[currentIndex];
     if (!card) return;
     
-    // Animate right - NO MARKING AS WRONG
     setSwipeClass("out-right");
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -230,10 +214,8 @@ function Swipe() {
     if (!isStarted || completed) return;
     setIsPaused(!isPaused);
     if (isPaused) {
-      // Resume timer
       setTimeLeft(5);
     } else {
-      // Pause timer
       if (timerRef.current) clearInterval(timerRef.current);
     }
   };
@@ -244,15 +226,14 @@ function Swipe() {
     setIsStarted(false);
   };
 
-  // Keyboard handlers
   useEffect(() => {
     const onKey = (e) => {
       if (!isStarted || isPaused || completed) return;
       
       if (e.key === "j" || e.key === "J") {
-        handleWrong(); // CONDITION A1
+        handleWrong();
       } else if (e.key === "l" || e.key === "L") {
-        handleRight(); // No marking as wrong
+        handleRight();
       } else if (e.key === " ") {
         e.preventDefault();
         toggleFlip();

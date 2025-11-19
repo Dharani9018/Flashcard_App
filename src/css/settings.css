@@ -91,7 +91,7 @@
     color: #22c55e;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
     .settings-wrapper {
         flex-direction: column;

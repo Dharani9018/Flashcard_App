@@ -1,4 +1,3 @@
-import React from "react";
 import "../css/About.css";
 import { useOutletContext} from "react-router-dom";
 import { useEffect } from "react";

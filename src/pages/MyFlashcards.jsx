@@ -13,7 +13,7 @@ const API = "http://localhost:5000/api";
 function MyFlashcards() {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // STATES
+  
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [showFolderForm, setShowFolderForm] = useState(false);
@@ -30,11 +30,11 @@ function MyFlashcards() {
   const [fabOpen, setFabOpen] = useState(false);
   const toggleFab = () => setFabOpen(!fabOpen);
 
-  // setPageTitle from layout
+  
   const outletContext = useOutletContext();
   const setPageTitle = outletContext?.setPageTitle || (() => {});
 
-  // sidebar listener
+  
   useEffect(() => {
     const checkSidebar = () => {
       const sidebar = document.querySelector(".nav-menu");
@@ -45,13 +45,13 @@ function MyFlashcards() {
     return () => clearInterval(interval);
   }, []);
 
-  // load folders on mount
+  
   useEffect(() => {
     if (user?._id) loadFolders();
     setPageTitle("My Flashcards");
   }, [user?._id]);
 
-  // **LOAD FOLDERS**
+  
   const loadFolders = async () => {
     setLoading(true);
     try {
@@ -72,7 +72,7 @@ function MyFlashcards() {
     if (folder) setPageTitle(`My Flashcards / ${folder.name}`);
   };
 
-  // **CREATE FOLDER**
+  
   const handleCreateFolder = () => {
     setShowFolderForm(true);
     setNewFolderName("");
@@ -114,7 +114,7 @@ function MyFlashcards() {
     }
   };
 
-  // **FLASHCARDS**
+  
   const handleAddClick = () => {
     setQuestion("");
     setAnswer("");
@@ -187,7 +187,7 @@ function MyFlashcards() {
     setSelectedFolder(newFolder);
   };
 
-  // **CSV IMPORT**
+  
   const handleImportClick = () => {
     if (!selectedFolder) return alert("Open a folder first.");
     fileInputRef.current?.click();
@@ -271,15 +271,15 @@ function MyFlashcards() {
     reader.readAsText(file);
   };
 
-  // **FLIP**
+  
   const toggleFlip = (index) => {
     setFlippedIndex(flippedIndex === index ? null : index);
   };
 
-  // ================== UI ==================
+  
   return (
     <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
-      {/* FILE INPUT */}
+     
       <input
         type="file"
         ref={fileInputRef}
@@ -288,7 +288,7 @@ function MyFlashcards() {
         onChange={handleFileUpload}
       />
 
-      {/* ========== FOLDER LIST ========== */}
+      
       {!selectedFolder && !showFolderForm && (
         <div className="folder-view" style={{ padding: "2rem 1rem" }}>
 
@@ -342,7 +342,7 @@ function MyFlashcards() {
             ))}
           </div>
 
-          {/* CREATE FOLDER FAB */}
+          
           <div style={{ position: "fixed", right: 20, bottom: 20, zIndex: 50 }}>
             <div
               className="fab-main"
@@ -366,7 +366,7 @@ function MyFlashcards() {
         </div>
       )}
 
-      {/* ========== CREATE FOLDER FORM ========== */}
+      
       {showFolderForm && (
         <div className="add-card">
           <div className="form-container">
@@ -396,10 +396,10 @@ function MyFlashcards() {
         </div>
       )}
 
-      {/* ========== INSIDE FOLDER ========== */}
+      
       {selectedFolder && !showForm && (
         <>
-          {/* FIXED BACK BUTTON */}
+          
           <button
             className="cancel-btn back-btn"
             onClick={() => {
@@ -417,7 +417,7 @@ function MyFlashcards() {
             ⬅ Back
           </button>
 
-          {/* FAB MENU */}
+          
           <div className={`fab-wrapper ${fabOpen ? "open" : ""}`}>
             <div
               className="fab-main"
@@ -511,7 +511,7 @@ function MyFlashcards() {
             </>
         )}
 
-      {/* ADD/EDIT FLASHCARD FORM */}
+      
       {showForm && (
         <div className="add-card">
           <div className="form-container">

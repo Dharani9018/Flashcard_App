@@ -1,14 +1,13 @@
-// src/components/Header.jsx
 import "../css/Header.css";
 import { TbCards } from "react-icons/tb";
-import { Link, useLocation } from "react-router-dom";   // ⬅ add useLocation
+import { Link, useLocation } from "react-router-dom";   
 import { IconContext } from "react-icons";
-import React from "react";
+
 
 function Header({ handleChange, icon: Icon, color1, color2, onCardClick, isLoggedIn, title }) {
     
-    const location = useLocation(); // ⬅ detect current route
-    const hideTitle = location.pathname === "/login/home"; // ⬅ hide ONLY on home page
+    const location = useLocation(); 
+    const hideTitle = location.pathname === "/login/home"; 
 
     return (
         <div className="header">
@@ -32,7 +31,7 @@ function Header({ handleChange, icon: Icon, color1, color2, onCardClick, isLogge
 
             {/* CENTER TITLE */}
             <div className="header-center" style={{ flex: 1, textAlign: "center" }}>
-                {!hideTitle && (   // ⬅ hide ONLY on home
+                {!hideTitle && (   
                     <div className="page-title" aria-live="polite" style={{ fontSize: 18, fontWeight: 600 }}>
                         {title || ""}
                     </div>

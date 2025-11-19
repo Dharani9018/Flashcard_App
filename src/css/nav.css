@@ -65,6 +65,7 @@
 }
 
 
+
 .nav-menu,
 .nav-menu.active {
     background: var(--side-bar);
@@ -77,7 +78,7 @@
     left: -100%;
     transition: 850ms;
 
-    /* ⭐ Sidebar ALWAYS stays above home background + floating cards */
+   
     z-index: 99999 !important;
     pointer-events: auto !important;
 }
@@ -86,6 +87,7 @@
     left: 0;
     transition: 350ms;
 }
+
 
 
 .nav-text {

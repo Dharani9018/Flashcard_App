@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Folder from "./models/Folder.js";
+import Folder from "./modelsfFolder.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -8,9 +8,9 @@ connectDB();
 
 async function migrateWrongCards() {
     try {
-        console.log("🔄 Starting migration: Converting 'wrong' status to 'not-memorized'...");
+        console.log(" Starting migration: Converting 'wrong' status to 'not-memorized'...");
         
-        // Find all folders
+       
         const folders = await Folder.find({});
         let convertedCount = 0;
         
@@ -31,10 +31,10 @@ async function migrateWrongCards() {
             }
         }
         
-        console.log(`\n✅ Migration complete! Converted ${convertedCount} cards from 'wrong' to 'not-memorized'`);
+        console.log(`\nMigration complete! Converted ${convertedCount} cards from 'wrong' to 'not-memorized'`);
         process.exit(0);
     } catch (error) {
-        console.error("❌ Migration failed:", error);
+        console.error(" Migration failed:", error);
         process.exit(1);
     }
 }

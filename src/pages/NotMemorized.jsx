@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import "../css/NotMemorized.css";
 import { MdDelete } from "react-icons/md";
 import { useOutletContext} from "react-router-dom";
@@ -16,7 +16,6 @@ function NotMemorized() {
     const [user, setUser] = useState(null);
     const [notMemorizedCards, setNotMemorizedCards] = useState([]);
 
-    // Load user
     useEffect(() => {
         const userData = localStorage.getItem("user");
         if (userData) {
@@ -24,7 +23,6 @@ function NotMemorized() {
         }
     }, []);
 
-    // Load cards
     useEffect(() => {
         if (!user?._id) return;
         
@@ -57,7 +55,6 @@ function NotMemorized() {
                 throw new Error('Failed to update card status');
             }
 
-            // Remove from local state
             const updated = [...notMemorizedCards];
             updated.splice(index, 1);
             setNotMemorizedCards(updated);

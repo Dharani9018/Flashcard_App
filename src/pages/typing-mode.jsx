@@ -23,13 +23,11 @@ function Typing() {
     setPageTitle("Typing Mode");
   }, [setPageTitle]);
 
-  // Load user
   useEffect(() => {
     const data = localStorage.getItem("user");
     if (data) setUser(JSON.parse(data));
   }, []);
 
-  // Load flashcards from selected folders only
   useEffect(() => {
     if (!user?._id) return;
 
@@ -47,7 +45,6 @@ function Typing() {
         const res = await fetch(`${API}/folders/${user._id}`);
         const data = await res.json();
 
-        // Only include flashcards from selected folders (robust ID comparison)
         const filtered = data.filter(folder =>
           selectedFolderIds.some(selId => String(selId) === String(folder._id))
         );
@@ -68,7 +65,6 @@ function Typing() {
     loadCards();
   }, [user?._id]);
 
-  // Timer logic - ONLY when started
   useEffect(() => {
     if (!isStarted || completed || !flashcards.length) return;
 
@@ -83,7 +79,6 @@ function Typing() {
       setTimeLeft(sec => {
         if (sec <= 1) {
           clearInterval(timerRef.current);
-          // CONDITION B1: Time limit exceeds - mark as not memorized
           handleTimeout();
           return 0;
         }
@@ -103,7 +98,7 @@ function Typing() {
             body: JSON.stringify({
                 folderId: card.folderId,
                 index: card.index,
-                status: "not-memorized", // Make sure this matches the enum
+                status: "not-memorized",
             }),
         });
         
@@ -118,7 +113,7 @@ function Typing() {
         console.error("Error marking wrong", err);
     }
 };
-  // Handle timeout - CONDITION B1
+
   const handleTimeout = async () => {
     const card = flashcards[currentIndex];
     if (!card) return;
@@ -140,7 +135,6 @@ function Typing() {
     if (typed === correct) {
       setFeedback("correct");
     } else {
-      // CONDITION B2: Answer is wrong - mark as not memorized
       console.log("Wrong answer - marking as not memorized");
       setFeedback("wrong");
       await markWrong(card);

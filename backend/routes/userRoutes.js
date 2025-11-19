@@ -4,7 +4,6 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
-// REGISTER
 router.post("/register", async (req, res) => {
     const { email, password, name } = req.body;
 
@@ -28,7 +27,6 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// LOGIN
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -53,7 +51,6 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// UPDATE EMAIL
 router.put("/update-email", async (req, res) => {
     const { userId, newEmail, currentPassword } = req.body;
 
@@ -73,8 +70,6 @@ router.put("/update-email", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
-// UPDATE PASSWORD
 
 router.put("/update-password", async (req, res) => {
     const { userId, newPassword, currentPassword } = req.body;
@@ -96,6 +91,5 @@ router.put("/update-password", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
 
 export default router;

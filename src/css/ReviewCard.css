@@ -9,7 +9,6 @@
 }
 
 .Rev-card::before {
-    content: '';
     position: absolute;
     top: 10px;
     left: 10px;
@@ -86,11 +85,11 @@
 }
 
 .question {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 2px;
-    line-height: 1.4;
-    color:var(--card-front)
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 2px !important;
+    line-height: 1.4 !important;
+    color:var(--card-front) !important;
 }
 
 .answer-input {

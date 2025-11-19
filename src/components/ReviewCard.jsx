@@ -19,7 +19,7 @@ function ReviewCard({ question = "What does HTML stand for?", answer = "HyperTex
             <div className={`Rev-card ${flipped ? "flipped" : ""}`}>
                 
                 <div className="inner">
-                    {/* FRONT: Question with text area */}
+                    
                     <div className="front">
                         <div className="card-content">
                             <p className="question">{question}</p>
@@ -38,7 +38,7 @@ function ReviewCard({ question = "What does HTML stand for?", answer = "HyperTex
                         </div>
                     </div>
 
-                    {/* BACK: Shows correct answer */}
+                    
                     <div className="back">
                         <div className="card-content">
                             <p className="answer-label">Your Answer:</p>

@@ -4,7 +4,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
-    min-height: 80vh;
+    min-height: 100vh;
     background: none;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .not-memorized-card {
-    background: var(--card-front);
+    background: var(--card-back);
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -76,7 +76,7 @@
 .card-question {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--card-front-text);
+    color: var(--card-front-text) !important;
     margin-bottom: 1rem;
     line-height: 1.5;
     background: none;
@@ -86,7 +86,7 @@
 
 .card-answer {
     font-size: 1rem;
-    color: var(--card-front-text);
+    color: var(--card-front-text) !important;
     line-height: 1.5;
     background: none;
 }

@@ -30,7 +30,6 @@
   background: transparent;
 }
 
-/* Top Bar */
 .typing-card-counter-top {
   display: flex;
   justify-content: space-between;
@@ -53,7 +52,6 @@
   font-weight: 600;
 }
 
-/* Card */
 .Rev-card {
   width: 100%;
   max-width: 550px;
@@ -74,7 +72,6 @@
   transform: rotateY(180deg);
 }
 
-/* Card Sides */
 .Rev-card .front,
 .Rev-card .back {
   position: absolute;
@@ -88,8 +85,6 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-
-  /* Better card visual */
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
@@ -102,7 +97,7 @@
   transform: rotateY(180deg);
 }
 
-/* Card Content */
+
 .card-content {
   width: 100%;
   height: 100%;
@@ -121,7 +116,6 @@
   margin-bottom: 2rem;
 }
 
-/* Answer Input */
 .Rev-card form {
   width: 100%;
   display: flex;
@@ -153,7 +147,7 @@
   color: #777;
 }
 
-/* Buttons */
+
 .submit-btn,
 .back-btn {
   padding: 0.9rem 2rem;
@@ -165,6 +159,13 @@
   transition: 0.2s ease;
 }
 
+p
+{
+    color: var(--text-primary) !important;
+  margin-bottom: 1.8rem !important;
+  font-size: 1.9rem !important;
+  font-weight: 700 !important;
+}
 .submit-btn {
   background: #6c3fa7;
   color: white;
@@ -189,7 +190,6 @@
   opacity: 0.9;
 }
 
-/* Answer review */
 .answer-label {
   font-weight: 700;
   color: #6c3fa7;
@@ -211,7 +211,6 @@
   font-style: italic;
 }
 
-/* Feedback Messages */
 .feedback-correct {
   color: #28a745;
 }
@@ -232,7 +231,7 @@
   margin: 0.5rem 0;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .typing-review-container {
     padding: 1rem;

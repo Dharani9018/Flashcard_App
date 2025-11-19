@@ -1,4 +1,3 @@
-// src/App.jsx
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Header from "./components/Header.jsx";
@@ -23,7 +22,7 @@ function App() {
     const [isDark, setIsDark] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // page title state passed into the logged-in layout and nested routes
+   
     const [pageTitle, setPageTitle] = useState("");
 
     useEffect(() => {
@@ -62,16 +61,16 @@ function App() {
 
             <main className="app-container">
                 <Routes>
-                    {/* Public Routes */}
+                   
                     <Route path="/" element={<Demo />} />
 
-                    {/* Login Page */}
+                    
                     <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
 
-                    {/* Register Page */}
+                   
                     <Route path="/register" element={<Register />} />
 
-                    {/* PROTECTED ROUTES */}
+                    
                     <Route
                         path="/login/home"
                         element={
@@ -88,11 +87,11 @@ function App() {
                             </ProtectedRoute>
                         }
                     >
-                        {/* Nested routes accessible only after login */}
+                        
                         <Route index element={<Home />} />
                         <Route path="my" element={<MyFlashcards />} />
                         
-                        {/* FIXED: Removed nested Routes component */}
+                       
                         <Route path="review" element={<ReviewMode />} />
                         <Route path="review/swipe" element={<Swipe />} />
                         <Route path="review/typing" element={<Typing />} />

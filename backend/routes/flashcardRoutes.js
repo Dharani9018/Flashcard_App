@@ -1,30 +1,25 @@
 import express from "express";
-import Folder from "../models/Folder.js";
+import Folder from "../models/folder.js";
 
 const router = express.Router();
 
-// UPDATE FLASHCARD STATUS 
 router.put("/status", async (req, res) => {
     try {
         const { folderId, index, status } = req.body;
 
         console.log("Updating flashcard status:", { folderId, index, status });
 
-        // Find the folder
         const folder = await Folder.findById(folderId);
         if (!folder) {
             return res.status(404).json({ error: "Folder not found" });
         }
 
-        // Check if the index is valid
         if (index < 0 || index >= folder.flashcards.length) {
             return res.status(404).json({ error: "Flashcard not found" });
         }
 
-        // Convert "wrong" to "not-memorized" if needed
         const finalStatus = status === "wrong" ? "not-memorized" : status;
-        
-        // Update the status using the index
+
         folder.flashcards[index].status = finalStatus;
         await folder.save();
 
@@ -43,7 +38,6 @@ router.put("/status", async (req, res) => {
     }
 });
 
-// GET NOT-MEMORIZED CARDS 
 router.get("/not-memorized/:userId", async (req, res) => {
     try {
         const folders = await Folder.find({ userId: req.params.userId });
@@ -52,7 +46,6 @@ router.get("/not-memorized/:userId", async (req, res) => {
 
         folders.forEach((folder) => {
             folder.flashcards.forEach((card, index) => {
-                // SHOW BOTH "not-memorized" AND "wrong" CARDS
                 if (card.status === "not-memorized" || card.status === "wrong") {
                     notMemorized.push({
                         ...card.toObject(),
@@ -71,8 +64,6 @@ router.get("/not-memorized/:userId", async (req, res) => {
     }
 });
 
-
-// Add Flashcard
 router.post("/add", async (req, res) => {
     const { folderId, question, answer } = req.body;
 
@@ -89,7 +80,6 @@ router.post("/add", async (req, res) => {
     }
 });
 
-// Update Flashcard by index
 router.put("/update", async (req, res) => {
     const { folderId, index, question, answer } = req.body;
 
@@ -110,7 +100,6 @@ router.put("/update", async (req, res) => {
     }
 });
 
-// Delete Flashcard by index
 router.put("/delete", async (req, res) => {
     const { folderId, index } = req.body;
 
@@ -130,7 +119,6 @@ router.put("/delete", async (req, res) => {
     }
 });
 
-// Import flashcards from CSV
 router.post("/import", async (req, res) => {
     const { folderId, cards } = req.body;
 

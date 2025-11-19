@@ -4,7 +4,7 @@
     text-align: center;
     margin-left: 20px;
     padding: 2rem;
-    height: auto;
+    min-height: 100vh;;
     background: none;
     position: relative;
     min-height: 500px;
@@ -19,16 +19,16 @@
 
 
 
-/* --- CARD LIST --- */
+
 .card-list-container {
     background: none !important;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 1.2rem;
-    align-items: flex-start;
+    align-items: center;
     min-height: 300px;
-    padding: 1rem;
+    padding: 0rem;
     margin: 0 auto;
     max-width: 100%;
     box-sizing: border-box;
@@ -44,7 +44,7 @@
     perspective: 1000px;
 }
 
-/* --- FLIP CARD --- */
+
 .flip-card {
     background: none;
     width: 400px;
@@ -89,7 +89,7 @@
     transition:  0.3s ease, box-shadow 0.3s ease;
 }
 
-/* --- FRONT SIDE --- */
+
 .flip-card-front {
     background: var(--card-front);
     font-weight: 600;
@@ -99,7 +99,7 @@
     box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
 }
 
-/* --- BACK SIDE --- */
+
 .flip-card-back {
     background: var(--card-back);
     transform: rotateX(180deg);
@@ -109,7 +109,7 @@
     box-shadow: 0 8px 20px rgba(91, 88, 235, 0.3);
 }
 
-/* --- FLASHCARD BUTTONS --- */
+
 .buttons-con {
     margin-top: 8px;
     background: none;
@@ -150,7 +150,7 @@
 
 }
 
-/* --- FORM SECTION --- */
+
 .form-container {
     width: 450px;
     height:auto;
@@ -317,6 +317,7 @@ h3 {
     transform: scale(1.05);
 }
 
+
 .fab-wrapper {
     position: fixed;
     bottom: 2rem;
@@ -329,6 +330,7 @@ h3 {
     transition: transform 0.35s ease;
     background:none;
 }
+
 
 .fab-main {
     width: 55px;
@@ -349,7 +351,7 @@ h3 {
     transform: scale(1.07);
 }
 
-/* SLIDE MENU */
+
 .fab-menu {
     display: flex;
     gap: 0.8rem;
@@ -371,6 +373,7 @@ h3 {
     background: none;
 }
 
+
 .fab-icon {
     width: 45px;
     height: 45px;
@@ -389,7 +392,7 @@ h3 {
     transform: scale(1.1);
 }
 
-/* TOOLTIP */
+
 .fab-tooltip {
     position: absolute;
     top: -25px;

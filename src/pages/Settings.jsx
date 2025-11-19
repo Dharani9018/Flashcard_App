@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react"; // Added useEffect import
 import "../css/settings.css";
 import { useOutletContext } from "react-router-dom";
 
@@ -8,15 +8,15 @@ function Settings() {
     const outletContext = useOutletContext();
     const setPageTitle = outletContext?.setPageTitle || (() => {});
     
-    // Set page title
+    
     useEffect(() => {
         setPageTitle("Settings");
     }, [setPageTitle]);
 
-    // Get user from localStorage safely
+    
     const [user, setUser] = useState(null);
     
-    // Load user from localStorage after component mounts
+    
     useEffect(() => {
         try {
             const userData = localStorage.getItem("user");
@@ -28,7 +28,7 @@ function Settings() {
         }
     }, []);
 
-    // --- STATES ---
+    
     const [emailData, setEmailData] = useState({
         newEmail: "",
         confirmEmail: "",
@@ -43,7 +43,7 @@ function Settings() {
 
     const [message, setMessage] = useState("");
 
-    // INPUT HANDLERS
+    
     const handleEmailChange = (e) => {
         const { name, value } = e.target;
         setEmailData((prev) => ({ ...prev, [name]: value }));
@@ -54,22 +54,22 @@ function Settings() {
         setPasswordData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // --- UPDATE EMAIL ---
+    
     const handleEmailSubmit = async (e) => {
         e.preventDefault();
         
         // Check if user is available
         if (!user) {
-            setMessage("❌ User not found. Please log in again.");
+            setMessage("User not found. Please log in again.");
             return;
         }
 
         const { newEmail, confirmEmail, currentPassword } = emailData;
 
         if (!newEmail || !confirmEmail || !currentPassword)
-            return setMessage("⚠️ Please fill all fields.");
+            return setMessage(" Please fill all fields.");
         if (newEmail !== confirmEmail)
-            return setMessage("⚠️ New emails do not match.");
+            return setMessage(" New emails do not match.");
 
         console.log("EMAIL REQUEST SENDING:", {
             userId: user._id,
@@ -98,7 +98,7 @@ function Settings() {
                     currentPassword: "",
                 });
                 
-                // Update user in localStorage if email was changed successfully
+                
                 if (data.user) {
                     localStorage.setItem("user", JSON.stringify(data.user));
                     setUser(data.user);
@@ -106,28 +106,28 @@ function Settings() {
             }
         } catch (err) {
             console.log("FRONTEND EMAIL ERROR:", err);
-            setMessage("❌ Error updating email.");
+            setMessage(" Error updating email.");
         }
     };
 
-    // --- UPDATE PASSWORD ---
+   
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
         
-        // Check if user is available
+        
         if (!user) {
-            setMessage("❌ User not found. Please log in again.");
+            setMessage(" User not found. Please log in again.");
             return;
         }
 
         const { newPassword, confirmPassword, currentPassword } = passwordData;
 
         if (!newPassword || !confirmPassword || !currentPassword)
-            return setMessage("⚠️ Please fill all fields.");
+            return setMessage("Please fill all fields.");
         if (newPassword !== confirmPassword)
-            return setMessage("⚠️ Passwords do not match.");
+            return setMessage("Passwords do not match.");
         if (newPassword.length < 6)
-            return setMessage("⚠️ Password should be at least 6 characters.");
+            return setMessage("Password should be at least 6 characters.");
 
         console.log("PASSWORD REQUEST SENDING:", {
             userId: user._id,
@@ -158,10 +158,11 @@ function Settings() {
             }
         } catch (err) {
             console.log("FRONTEND PASSWORD ERROR:", err);
-            setMessage("❌ Error updating password.");
+            setMessage(" Error updating password.");
         }
     };
 
+    
     if (!user) {
         return <h2 className="settings-title">Loading...</h2>;
     }
@@ -171,7 +172,7 @@ function Settings() {
 
             <div className="settings-wrapper">
 
-                {/* --- CHANGE EMAIL --- */}
+                
                 <div className="settings-card">
                     <h3>Change Email</h3>
                     <form onSubmit={handleEmailSubmit}>
@@ -208,7 +209,7 @@ function Settings() {
                     </form>
                 </div>
 
-                {/* --- CHANGE PASSWORD --- */}
+                
                 <div className="settings-card">
                     <h3>Change Password</h3>
                     <form onSubmit={handlePasswordSubmit}>

@@ -1,9 +1,8 @@
 import express from "express";
-import Folder from "../models/Folder.js";
+import Folder from "../models/folder.js";
 
 const router = express.Router();
 
-// Create folder
 router.post("/create", async (req, res) => {
     const { userId, name } = req.body;
 
@@ -15,7 +14,6 @@ router.post("/create", async (req, res) => {
     }
 });
 
-// Get all folders for a user
 router.get("/:userId", async (req, res) => {
     try {
         const folders = await Folder.find({ userId: req.params.userId });
@@ -25,7 +23,6 @@ router.get("/:userId", async (req, res) => {
     }
 });
 
-// Delete folder
 router.delete("/:folderId", async (req, res) => {
     try {
         await Folder.findByIdAndDelete(req.params.folderId);

@@ -21,7 +21,6 @@
     background:none !important;
 }
 
-/* Remove background from the card icon link/container */
 .logo-flash {
     background: none !important;
     border: none !important;
@@ -40,5 +39,7 @@
     background:none;
 }
 
-
+.page-title{
+    color:var(--text-primary);
+}
 

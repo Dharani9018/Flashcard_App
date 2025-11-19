@@ -1,8 +1,7 @@
-import React from 'react';
 import * as AiIcons from "react-icons/ai";
 import { MdQuiz } from "react-icons/md";
 import { MdOutlinePendingActions } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5"; // better gear icon
+
 
 export const SidebarData = [
     {
