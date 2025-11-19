@@ -1,8 +1,8 @@
-# 🎓 Flashcard App 
+#  Flashcard App
 
 A modern, full-stack web application for creating, managing, and mastering flashcards using interactive review modes. Built with **React + Vite** (frontend) and **Node.js + Express + MongoDB** (backend).
 
-##  Features
+## Features
 
 ### Core Functionality
 - **User Authentication**: Secure registration and login with bcrypt password hashing
