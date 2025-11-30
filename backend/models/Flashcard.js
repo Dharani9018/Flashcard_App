@@ -6,7 +6,7 @@ const flashcardSchema = new mongoose.Schema({
     status: { 
         type: String, 
         default: "new",
-        enum: ["new", "memorized", "not-memorized"] // REMOVE "wrong"
+        enum: ["new", "memorized", "not-memorized"] 
     }
 });
 
