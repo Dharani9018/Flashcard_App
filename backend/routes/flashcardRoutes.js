@@ -1,137 +1,160 @@
 import express from "express";
-import Folder from "../models/folder.js";
+import User from "../models/userModel.js";
 
 const router = express.Router();
 
+// Update flashcard status
 router.put("/status", async (req, res) => {
     try {
-        const { folderId, index, status } = req.body;
+        const { userId, folderIndex, cardIndex, status } = req.body;
 
-        console.log("Updating flashcard status:", { folderId, index, status });
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
 
-        const folder = await Folder.findById(folderId);
-        if (!folder) {
-            return res.status(404).json({ error: "Folder not found" });
-        }
+        const folder = user.folders[folderIndex];
+        if (!folder) return res.status(404).json({ error: "Folder not found" });
 
-        if (index < 0 || index >= folder.flashcards.length) {
-            return res.status(404).json({ error: "Flashcard not found" });
-        }
+        const flashcard = folder.flashcards[cardIndex];
+        if (!flashcard) return res.status(404).json({ error: "Flashcard not found" });
 
         const finalStatus = status === "wrong" ? "not-memorized" : status;
-
-        folder.flashcards[index].status = finalStatus;
-        await folder.save();
-
-        console.log("Status updated successfully:", {
-            question: folder.flashcards[index].question,
-            status: folder.flashcards[index].status
-        });
+        flashcard.status = finalStatus;
+        
+        await user.save();
 
         res.json({ 
             message: "Status updated", 
-            flashcard: folder.flashcards[index] 
+            flashcard 
         });
     } catch (err) {
-        console.error("Error updating status:", err);
-        res.status(500).json({ error: "Failed to update status: " + err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 
+// Get not-memorized flashcards for user
 router.get("/not-memorized/:userId", async (req, res) => {
     try {
-        const folders = await Folder.find({ userId: req.params.userId });
+        const user = await User.findById(req.params.userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
 
         let notMemorized = [];
 
-        folders.forEach((folder) => {
-            folder.flashcards.forEach((card, index) => {
+        user.folders.forEach((folder, folderIndex) => {
+            folder.flashcards.forEach((card, cardIndex) => {
                 if (card.status === "not-memorized" || card.status === "wrong") {
                     notMemorized.push({
                         ...card.toObject(),
-                        folderId: folder._id,
+                        folderIndex: folderIndex,
                         folderName: folder.name,
-                        index: index
+                        cardIndex: cardIndex
                     });
                 }
             });
         });
 
-        console.log(`Found ${notMemorized.length} not-memorized cards`);
         res.json(notMemorized);
     } catch (err) {
-        res.status(500).json({ error: "Failed to fetch not memorized cards" });
+        res.status(500).json({ error: err.message });
     }
 });
 
+// Add flashcard to folder
 router.post("/add", async (req, res) => {
-    const { folderId, question, answer } = req.body;
+    const { userId, folderIndex, question, answer } = req.body;
 
     try {
-        const folder = await Folder.findById(folderId);
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const folder = user.folders[folderIndex];
         if (!folder) return res.status(404).json({ error: "Folder not found" });
 
         folder.flashcards.push({ question, answer });
-        await folder.save();
+        await user.save();
 
-        res.json({ message: "Flashcard added", flashcards: folder.flashcards });
+        res.json({ 
+            message: "Flashcard added", 
+            flashcards: folder.flashcards 
+        });
     } catch (err) {
-        res.status(500).json({ error: "Error adding flashcard: " + err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 
+// Update flashcard
 router.put("/update", async (req, res) => {
-    const { folderId, index, question, answer } = req.body;
+    const { userId, folderIndex, cardIndex, question, answer } = req.body;
 
     try {
-        const folder = await Folder.findById(folderId);
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const folder = user.folders[folderIndex];
         if (!folder) return res.status(404).json({ error: "Folder not found" });
 
-        if (!folder.flashcards[index])
-            return res.status(404).json({ error: "Flashcard not found" });
+        const flashcard = folder.flashcards[cardIndex];
+        if (!flashcard) return res.status(404).json({ error: "Flashcard not found" });
 
-        folder.flashcards[index].question = question;
-        folder.flashcards[index].answer = answer;
-        await folder.save();
+        flashcard.question = question;
+        flashcard.answer = answer;
+        await user.save();
 
-        res.json({ message: "Flashcard updated", flashcards: folder.flashcards });
+        res.json({ message: "Flashcard updated", flashcard });
     } catch (err) {
-        res.status(500).json({ error: "Error updating flashcard: " + err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 
-router.put("/delete", async (req, res) => {
-    const { folderId, index } = req.body;
+// Delete flashcard
+router.delete("/delete", async (req, res) => {
+    const { userId, folderIndex, cardIndex } = req.body;
 
     try {
-        const folder = await Folder.findById(folderId);
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const folder = user.folders[folderIndex];
         if (!folder) return res.status(404).json({ error: "Folder not found" });
 
-        if (!folder.flashcards[index])
+        if (!folder.flashcards[cardIndex]) {
             return res.status(404).json({ error: "Flashcard not found" });
+        }
 
-        folder.flashcards.splice(index, 1);
-        await folder.save();
+        folder.flashcards.splice(cardIndex, 1);
+        await user.save();
 
         res.json({ message: "Flashcard deleted", flashcards: folder.flashcards });
     } catch (err) {
-        res.status(500).json({ error: "Error deleting flashcard: " + err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 
+// Import multiple flashcards
 router.post("/import", async (req, res) => {
-    const { folderId, cards } = req.body;
+    const { userId, folderIndex, cards } = req.body;
 
     try {
-        const folder = await Folder.findById(folderId);
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const folder = user.folders[folderIndex];
         if (!folder) return res.status(404).json({ error: "Folder not found" });
 
-        folder.flashcards.push(...cards);
-        await folder.save();
+        // Add all cards to folder
+        folder.flashcards.push(...cards.map(card => ({
+            question: card.question,
+            answer: card.answer,
+            status: "new"
+        })));
+        
+        await user.save();
 
-        res.json({ message: `${cards.length} flashcards imported`, flashcards: folder.flashcards });
+        res.json({ 
+            message: `${cards.length} flashcards imported`, 
+            flashcards: folder.flashcards 
+        });
     } catch (err) {
-        res.status(500).json({ error: "Error importing flashcards: " + err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 

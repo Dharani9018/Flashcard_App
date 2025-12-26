@@ -1,7 +1,7 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../css/NotMemorized.css";
 import { MdDelete } from "react-icons/md";
-import { useOutletContext} from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 const API = "http://localhost:5000/api";
 
@@ -45,8 +45,9 @@ function NotMemorized() {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    folderId: card.folderId,
-                    index: card.index,
+                    userId: user._id, // NEW
+                    folderIndex: card.folderIndex, // CHANGED from folderId
+                    cardIndex: card.cardIndex, // CHANGED from index
                     status: "new",
                 }),
             });
@@ -72,8 +73,9 @@ function NotMemorized() {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        folderId: card.folderId,
-                        index: card.index,
+                        userId: user._id, // NEW
+                        folderIndex: card.folderIndex, // CHANGED
+                        cardIndex: card.cardIndex, // CHANGED
                         status: "new",
                     }),
                 })
@@ -93,8 +95,6 @@ function NotMemorized() {
     return (
         <div className="not-memorized-container">
             <div className="not-memorized-header">
-                
-
                 {notMemorizedCards.length > 0 && (
                     <button className="clear-all-btn" onClick={clearAllCards}>
                         Clear All
@@ -107,10 +107,10 @@ function NotMemorized() {
             ) : (
                 <div className="not-memorized-list">
                     {notMemorizedCards.map((card, index) => (
-                        <div key={`${card.folderId}-${card.index}`} className="not-memorized-card">
+                        <div key={`${card.folderIndex}-${card.cardIndex}`} className="not-memorized-card">
                             <div className="card-content">
                                 <div className="card-folder">
-                                    <strong></strong> {card.folderName}
+                                    <strong>Folder:</strong> {card.folderName}
                                 </div>
                                 <div className="card-question">
                                     <strong>Q:</strong> {card.question}

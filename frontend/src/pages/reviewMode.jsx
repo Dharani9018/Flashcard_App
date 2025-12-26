@@ -7,7 +7,7 @@ const API = "http://localhost:5000/api";
 function ReviewMode() {
 	const [user, setUser] = useState(null);
 	const [folders, setFolders] = useState([]);
-	const [selectedFolders, setSelectedFolders] = useState([]);
+	const [selectedFolderIndices, setSelectedFolderIndices] = useState([]); // CHANGED
 	const [step, setStep] = useState(0);
 	const [loading, setLoading] = useState(true);
 
@@ -47,78 +47,79 @@ function ReviewMode() {
 		loadFolders();
 	}, [user]);
 
-	const toggleFolder = (id) => {
-		setSelectedFolders((prev) =>
-			prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
+	const toggleFolder = (index) => { // CHANGED parameter
+		setSelectedFolderIndices((prev) =>
+			prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
 		);
 	};
 
 	const proceedToMode = () => {
-		if (selectedFolders.length === 0) return;
+		if (selectedFolderIndices.length === 0) return;
 		setStep(1);
 	};
 
 	const handleModeSelect = (mode) => {
-    sessionStorage.setItem("reviewFolders", JSON.stringify(selectedFolders));
-    if (mode === "swipe") navigate("/login/home/review/swipe");
-    else if (mode === "typing") navigate("/login/home/review/typing");
-};
+		// Store folder INDICES instead of IDs
+		sessionStorage.setItem("reviewFolderIndices", JSON.stringify(selectedFolderIndices));
+		if (mode === "swipe") navigate("/login/home/review/swipe");
+		else if (mode === "typing") navigate("/login/home/review/typing");
+	};
 
-if (step === 0) {
-  return (
-    <div className="review-container">
-      <div className="review-content">
-        <h2 className="review-title">Select Folders to Review</h2>
+	if (step === 0) {
+		return (
+			<div className="review-container">
+				<div className="review-content">
+					<h2 className="review-title">Select Folders to Review</h2>
 
-        {loading ? (
-          <p>Loading folders...</p>
-        ) : folders.length === 0 ? (
-          <div>
-            <p>No folders found.</p>
-            <p className="hint">Create folders in "My Flashcards" first!</p>
-          </div>
-        ) : (
-          <>
-            <div className="folder-select-list">
-              {folders.map((folder) => (
-                <label
-                  key={folder._id}
-                  className={`folder-select-item${
-                    selectedFolders.includes(folder._id) ? " selected" : ""
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedFolders.includes(folder._id)}
-                    onChange={() => toggleFolder(folder._id)}
-                  />
-                  <span>
-                    {folder.name} ({folder.flashcards?.length || 0} cards)
-                  </span>
-                </label>
-              ))}
-            </div>
+					{loading ? (
+						<p>Loading folders...</p>
+					) : folders.length === 0 ? (
+						<div>
+							<p>No folders found.</p>
+							<p className="hint">Create folders in "My Flashcards" first!</p>
+						</div>
+					) : (
+						<>
+							<div className="folder-select-list">
+								{folders.map((folder, index) => ( // Added index
+									<label
+										key={index} // Use index as key
+										className={`folder-select-item${
+											selectedFolderIndices.includes(index) ? " selected" : ""
+										}`}
+									>
+										<input
+											type="checkbox"
+											checked={selectedFolderIndices.includes(index)}
+											onChange={() => toggleFolder(index)} // Pass index
+										/>
+										<span>
+											{folder.name} ({folder.flashcards?.length || 0} cards)
+										</span>
+									</label>
+								))}
+							</div>
 
-            <div className="button-container">
-              <button
-                className="proceed-btn"
-                disabled={selectedFolders.length === 0}
-                onClick={proceedToMode}
-              >
-                Next ({selectedFolders.length} folder
-                {selectedFolders.length !== 1 ? "s" : ""} selected)
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
+							<div className="button-container">
+								<button
+									className="proceed-btn"
+									disabled={selectedFolderIndices.length === 0}
+									onClick={proceedToMode}
+								>
+									Next ({selectedFolderIndices.length} folder
+									{selectedFolderIndices.length !== 1 ? "s" : ""} selected)
+								</button>
+							</div>
+						</>
+					)}
+				</div>
+			</div>
+		);
+	}
 	
 	if (step === 1) {
 		const totalCards = folders
-			.filter((folder) => selectedFolders.includes(folder._id))
+			.filter((folder, index) => selectedFolderIndices.includes(index)) // Filter by index
 			.reduce((sum, folder) => sum + (folder.flashcards?.length || 0), 0);
 
 		return (
@@ -126,8 +127,8 @@ if (step === 0) {
 				<h2 className="review-title">Choose Review Mode</h2>
 
 				<p className="selection-info">
-					Selected {selectedFolders.length} folder
-					{selectedFolders.length !== 1 ? "s" : ""} • {totalCards} cards total
+					Selected {selectedFolderIndices.length} folder
+					{selectedFolderIndices.length !== 1 ? "s" : ""} • {totalCards} cards total
 				</p>
 
 				<div className="mode-select-list">
