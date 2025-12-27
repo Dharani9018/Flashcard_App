@@ -31,9 +31,9 @@ function Typing() {
 	useEffect(() => {
 		if (!user?._id) return;
 
-		const selectedFolderIndices = (() => { // CHANGED
+		const selectedFolderIndices = (() => { 
 			try {
-				const val = sessionStorage.getItem("reviewFolderIndices"); // CHANGED
+				const val = sessionStorage.getItem("reviewFolderIndices"); 
 				return val ? JSON.parse(val) : [];
 			} catch {
 				return [];
@@ -45,7 +45,7 @@ function Typing() {
 				const res = await fetch(`${API}/folders/${user._id}`);
 				const data = await res.json();
 
-				// Filter by folder indices
+				
 				const filtered = data.filter((folder, index) =>
 					selectedFolderIndices.includes(index)
 				);
@@ -53,8 +53,8 @@ function Typing() {
 				const merged = filtered.flatMap((folder, folderIndex) =>
 					folder.flashcards.map((card, cardIndex) => ({
 						...card,
-						folderIndex: folderIndex, // Store folder index
-						cardIndex: cardIndex, // Store card index
+						folderIndex: folderIndex, 
+						cardIndex: cardIndex, 
 					}))
 				);
 
@@ -98,9 +98,9 @@ function Typing() {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					userId: user._id, // NEW
-					folderIndex: card.folderIndex, // CHANGED
-					cardIndex: card.cardIndex, // CHANGED
+					userId: user._id, 
+					folderIndex: card.folderIndex, 
+					cardIndex: card.cardIndex, 
 					status: "not-memorized",
 				}),
 			});

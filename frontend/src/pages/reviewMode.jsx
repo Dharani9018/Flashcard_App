@@ -47,7 +47,7 @@ function ReviewMode() {
 		loadFolders();
 	}, [user]);
 
-	const toggleFolder = (index) => { // CHANGED parameter
+	const toggleFolder = (index) => { 
 		setSelectedFolderIndices((prev) =>
 			prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
 		);
@@ -59,7 +59,7 @@ function ReviewMode() {
 	};
 
 	const handleModeSelect = (mode) => {
-		// Store folder INDICES instead of IDs
+
 		sessionStorage.setItem("reviewFolderIndices", JSON.stringify(selectedFolderIndices));
 		if (mode === "swipe") navigate("/login/home/review/swipe");
 		else if (mode === "typing") navigate("/login/home/review/typing");
@@ -81,9 +81,9 @@ function ReviewMode() {
 					) : (
 						<>
 							<div className="folder-select-list">
-								{folders.map((folder, index) => ( // Added index
+								{folders.map((folder, index) => ( 
 									<label
-										key={index} // Use index as key
+										key={index}
 										className={`folder-select-item${
 											selectedFolderIndices.includes(index) ? " selected" : ""
 										}`}
@@ -91,7 +91,7 @@ function ReviewMode() {
 										<input
 											type="checkbox"
 											checked={selectedFolderIndices.includes(index)}
-											onChange={() => toggleFolder(index)} // Pass index
+											onChange={() => toggleFolder(index)}
 										/>
 										<span>
 											{folder.name} ({folder.flashcards?.length || 0} cards)
@@ -119,7 +119,7 @@ function ReviewMode() {
 	
 	if (step === 1) {
 		const totalCards = folders
-			.filter((folder, index) => selectedFolderIndices.includes(index)) // Filter by index
+			.filter((folder, index) => selectedFolderIndices.includes(index))
 			.reduce((sum, folder) => sum + (folder.flashcards?.length || 0), 0);
 
 		return (

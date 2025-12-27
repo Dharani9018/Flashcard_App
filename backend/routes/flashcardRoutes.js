@@ -3,7 +3,7 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
-// Update flashcard status
+
 router.put("/status", async (req, res) => {
     try {
         const { userId, folderIndex, cardIndex, status } = req.body;
@@ -31,7 +31,7 @@ router.put("/status", async (req, res) => {
     }
 });
 
-// Get not-memorized flashcards for user
+
 router.get("/not-memorized/:userId", async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
@@ -58,7 +58,7 @@ router.get("/not-memorized/:userId", async (req, res) => {
     }
 });
 
-// Add flashcard to folder
+
 router.post("/add", async (req, res) => {
     const { userId, folderIndex, question, answer } = req.body;
 
@@ -81,7 +81,7 @@ router.post("/add", async (req, res) => {
     }
 });
 
-// Update flashcard
+
 router.put("/update", async (req, res) => {
     const { userId, folderIndex, cardIndex, question, answer } = req.body;
 

@@ -1,0 +1,38 @@
+@import url("../Variables.css");
+.folder-card {
+    background: var(--card-front);
+    color: white;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    width: 100%;
+    max-width: 320px;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.25s ease;
+}
+
+.folder-card:hover {
+    transform: scale(1.05);
+}
+
+.folder-card-title {
+    margin: 0;
+    font-size: 1.2rem;
+    padding: 0.75rem;
+    cursor: pointer;
+}
+
+.delete-folder {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+.delete-folder:hover {
+    opacity: 0.8;
+}

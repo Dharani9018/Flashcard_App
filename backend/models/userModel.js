@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    folders: [folderSchema]  // Embedded folders array
+    folders: [folderSchema] 
 });
 
 export default mongoose.model("User", userSchema);

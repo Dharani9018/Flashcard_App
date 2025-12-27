@@ -2,7 +2,7 @@
     --background: radial-gradient(circle at center, #fbe4e6 0%, #f3d9f4 50%, #f5f0e6 100%);
     --side-bar: linear-gradient(135deg, #f0f4f7 0%, #e9eef2 50%, #d8e2ec 100%);
     --button-bg: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    --card-front: linear-gradient(135deg, #f48fb1 0%, #ce93d8 50%, #b39ddb 100%);  /* keep */
+    --card-front: linear-gradient(135deg, #f48fb1 0%, #ce93d8 50%, #b39ddb 100%);  
 
 
     --text-primary: #1a1a1a;
@@ -34,7 +34,7 @@
     --button-bg: linear-gradient(135deg, #3399ff 0%, #1e88e5 100%);
     --button-text: #ffffff;
 
-        --card-front: linear-gradient(135deg, #4a235a 0%, #35276e 50%, #1a237e 100%); /* KEEP */
+        --card-front: linear-gradient(135deg, #4a235a 0%, #35276e 50%, #1a237e 100%); 
     
     --card-back: linear-gradient(135deg, #2a3038 0%, #1f242b 50%, #161a20 100%);
     --card-front-text: #e8e8e8;

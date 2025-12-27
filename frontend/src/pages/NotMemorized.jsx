@@ -45,9 +45,9 @@ function NotMemorized() {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    userId: user._id, // NEW
-                    folderIndex: card.folderIndex, // CHANGED from folderId
-                    cardIndex: card.cardIndex, // CHANGED from index
+                    userId: user._id,
+                    folderIndex: card.folderIndex, 
+                    cardIndex: card.cardIndex, 
                     status: "new",
                 }),
             });
@@ -74,8 +74,8 @@ function NotMemorized() {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         userId: user._id, // NEW
-                        folderIndex: card.folderIndex, // CHANGED
-                        cardIndex: card.cardIndex, // CHANGED
+                        folderIndex: card.folderIndex,
+                        cardIndex: card.cardIndex,
                         status: "new",
                     }),
                 })

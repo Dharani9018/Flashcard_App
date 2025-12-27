@@ -6,7 +6,7 @@ function Demo() {
     return (
         <div className="demo-container">
             <h2>FLASHCARD MAKER</h2>
-            <p className="title">⚔️ The ultimate study weapon ⚔️</p>
+            <p className="title">The ultimate study weapon </p>
             <p className="info">A better way to study with flashcards is here. Creating your own set of flashcards is simple with our free flashcard maker.</p>
             <div className="demo">
                 <div className="demo-bg">
@@ -16,8 +16,8 @@ function Demo() {
 
                 <div className="wrapper">
                     <div className="btn">
-                        <p>Boost your learning efficiency⚡</p>
-                        <p>Sign up now to make your own 🗃️</p>
+                        <p>Boost your learning efficiency</p>
+                        <p>Sign up now to make your own </p>
                         <br></br>
                         <div className="btn-container">
                             <Link to='/register' className="btn-link primary">Get started</Link>

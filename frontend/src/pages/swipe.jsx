@@ -40,7 +40,7 @@ function Swipe() {
 
 		const selectedFolderIndices = (() => {
 			try {
-				const val = sessionStorage.getItem("reviewFolderIndices"); // CHANGED
+				const val = sessionStorage.getItem("reviewFolderIndices"); 
 				return val ? JSON.parse(val) : [];
 			} catch {
 				return [];
@@ -57,11 +57,11 @@ function Swipe() {
 					selectedFolderIndices.includes(index)
 				);
 				
-				const merged = filtered.flatMap((folder, folderIndex) => // Added folderIndex
+				const merged = filtered.flatMap((folder, folderIndex) => 
 					folder.flashcards.map((card, cardIndex) => ({
 						...card,
-						folderIndex: folderIndex, // Store folder index
-						cardIndex: cardIndex, // Store card index
+						folderIndex: folderIndex, 
+						cardIndex: cardIndex, 
 					}))
 				);
 
@@ -110,9 +110,9 @@ function Swipe() {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					userId: user._id, // NEW
-					folderIndex: card.folderIndex, // CHANGED
-					cardIndex: card.cardIndex, // CHANGED
+					userId: user._id,
+					folderIndex: card.folderIndex, 
+					cardIndex: card.cardIndex, 
 					status: "not-memorized",
 				}),
 			});
