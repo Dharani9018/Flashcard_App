@@ -4,7 +4,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import "../css/myFlashcards.css";
 import "../css/nav.css";
 
-// Import components
+
 import FolderItem from "../components/FolderItem.jsx";
 import FlashcardItem from "../components/FlashcardItem.jsx";
 import FlashcardForm from "../components/FlashcardForm.jsx";
@@ -123,6 +123,11 @@ function MyFlashcards() {
     setShowForm(true);
   };
 
+  const handleBackClick = () => {
+  setSelectedFolder(null);
+  setSelectedFolderIndex(null);
+  setPageTitle("My Flashcards");
+};
   const handleSaveFlashcard = async () => {
     if (!question.trim() || !answer.trim()) {
       setError("Please fill out both fields!");
@@ -346,22 +351,12 @@ function MyFlashcards() {
 
       {selectedFolder && !showForm && (
         <>
-          <button
-            className="cancel-btn back-btn"
-            onClick={() => {
-              setSelectedFolder(null);
-              setSelectedFolderIndex(null);
-              setPageTitle("My Flashcards");
-            }}
-          >
-            ⬅ Back
-          </button>
-
           <FAB
             fabOpen={fabOpen}
             onToggleFab={toggleFab}
             onImportClick={handleImportClick}
             onAddClick={handleAddClick}
+            onBackClick={handleBackClick}
           />
 
           <div className="card-list-container">

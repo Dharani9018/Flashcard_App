@@ -2,105 +2,53 @@
 
 .container {
     text-align: center;
-    padding: 2rem 1.5rem;
+    padding: 2rem;
     min-height: 100vh;
-    background: var(--background);
+    background: none;
     position: relative;
     width: 100%;
-    transition: transform 0.3s ease;
+    transition: transform 0.35s ease;
 }
 
 .container.sidebar-active {
     transform: translateX(250px);
 }
 
-/* Folder View */
 .folder-view {
-    background: transparent;
+    background: none;
     text-align: center;
-    padding: 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    margin-top: 2rem;
+    padding: 2rem 1rem;
 }
 
 .folder-grid {
+    background: none;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.25rem;
-    padding: 1.5rem 0;
-    margin-bottom: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+    width: 100%;
+    max-width: 1100px;
+    margin: 1rem auto 3.5rem auto;
 }
 
 .empty-msg {
-    color: var(--text-muted);
+    color: gray;
     font-style: italic;
-    padding: 3rem;
-    grid-column: 1 / -1;
-    font-size: 1.1rem;
+    margin-top: 1rem;
 }
 
-/* Back Button */
-.back-btn {
-    position: fixed;
-    bottom: 24px;
-    left: 24px;
-    z-index: 50;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    background: var(--button-bg);
-    color: var(--button-text);
-    border: none;
-    box-shadow: var(--shadow-md);
-    font-size: 0.95rem;
-}
-
-.back-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* Cards Container */
 .card-list-container {
-    background: transparent;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.75rem;
-    padding: 2rem;
-    max-width: 1400px;
+    background: none !important;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem;
+    align-items: center;
+    min-height: 300px;
+    padding: 0rem;
     margin: 0 auto;
-    transition: transform 0.3s ease;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .container {
-        padding: 1.5rem 1rem;
-    }
-    
-    .card-list-container {
-        grid-template-columns: 1fr;
-        padding: 1.5rem;
-        gap: 1.5rem;
-    }
-    
-    .folder-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 1rem;
-    }
-    
-    .back-btn {
-        bottom: 16px;
-        left: 16px;
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .folder-grid {
-        grid-template-columns: 1fr;
-    }
+    max-width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.35s ease;
 }

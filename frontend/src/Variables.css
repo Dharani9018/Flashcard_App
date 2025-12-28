@@ -34,8 +34,7 @@
     --button-bg: linear-gradient(135deg, #3399ff 0%, #1e88e5 100%);
     --button-text: #ffffff;
 
-        --card-front: linear-gradient(135deg, #4a235a 0%, #35276e 50%, #1a237e 100%); 
-    
+    --card-front: linear-gradient(135deg, #2d3436 0%, #3a4143 50%, #2d3436 100%);
     --card-back: linear-gradient(135deg, #2a3038 0%, #1f242b 50%, #161a20 100%);
     --card-front-text: #e8e8e8;
     --card-back-text: #e0e0e0;
