@@ -1,4 +1,5 @@
-import { MdDelete, MdOutlineModeEdit } from "react-icons/md";
+import { MdOutlineModeEdit } from "react-icons/md";
+import { BsCheckSquare, BsSquare } from "react-icons/bs";
 import "../css/FlashcardItem.css";
 
 function FlashcardItem({ 
@@ -7,72 +8,94 @@ function FlashcardItem({
   isFlipped, 
   onFlip, 
   onEdit, 
-  onDelete,
-  isSelectionMode = false,
-  isSelected = false,
-  onSelect = () => {}
+  onSelect,
+  isSelected,
+  selectionMode
 }) {
-  const handleCardClick = (e) => {
-    // If in selection mode, don't flip - just select
-    if (isSelectionMode) {
-      e.stopPropagation();
-      onSelect(index);
-    } else {
-      onFlip(index);
-    }
-  };
-
   return (
-    <div className={`flashcard-item ${isSelectionMode ? 'selection-mode' : ''} ${isSelected ? 'selected' : ''}`}>
-      {/* Selection checkbox - only shown in selection mode */}
-      {isSelectionMode && (
-        <input
-          type="checkbox"
-          className="select-checkbox"
-          checked={isSelected}
-          onChange={() => onSelect(index)}
-        />
-      )}
-      
+    <div className="flashcard-item">
       <div
         className={`flip-card ${isFlipped ? "flipped" : ""}`}
-        onClick={handleCardClick}
+        onClick={(e) => {
+          // Only flip if not clicking on checkbox or edit button
+          if (!e.target.closest('.checkbox-container') && 
+              !e.target.closest('.edit-button-container')) {
+            onFlip(index);
+          }
+        }}
       >
         <div className="flip-card-inner">
+          {/* Front side */}
           <div className="flip-card-front">
+            {selectionMode && (
+              <div 
+                className="checkbox-container"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(index);
+                }}
+              >
+                {isSelected ? (
+                  <BsCheckSquare className="checkbox checked" />
+                ) : (
+                  <BsSquare className="checkbox" />
+                )}
+              </div>
+            )}
+            
+            {/* Edit button on front side */}
+            {!selectionMode && (
+              <button
+                className="edit-button-container"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(index);
+                }}
+                aria-label="Edit flashcard"
+              >
+                <MdOutlineModeEdit className="edit-icon" />
+              </button>
+            )}
+            
             <p>{card.question}</p>
           </div>
+          
+          {/* Back side */}
           <div className="flip-card-back">
+            {selectionMode && (
+              <div 
+                className="checkbox-container"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(index);
+                }}
+              >
+                {isSelected ? (
+                  <BsCheckSquare className="checkbox checked" />
+                ) : (
+                  <BsSquare className="checkbox" />
+                )}
+              </div>
+            )}
+            
+            {/* Edit button on back side */}
+            {!selectionMode && (
+              <button
+                className="edit-button-container"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(index);
+                }}
+                aria-label="Edit flashcard"
+              >
+                <MdOutlineModeEdit className="edit-icon" />
+              </button>
+            )}
+            
             <p>{card.answer}</p>
           </div>
         </div>
       </div>
-
-      {/* Buttons - hidden in selection mode */}
-      {!isSelectionMode && (
-        <div className="buttons-con">
-          <button
-            className="edit"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(index);
-            }}
-            aria-label="Edit flashcard"
-          >
-            <MdOutlineModeEdit size={20} />
-          </button>
-          <button
-            className="delete"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(index);
-            }}
-            aria-label="Delete flashcard"
-          >
-            <MdDelete size={20} />
-          </button>
-        </div>
-      )}
     </div>
   );
 }

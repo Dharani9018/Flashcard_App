@@ -1,9 +1,9 @@
-import  { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import "../css/myFlashcards.css";
-import "../css/nav.css";
-
+import { MdSelectAll, MdDeselect, MdDelete } from "react-icons/md";
+import { RxCrossCircled } from "react-icons/rx";
 
 import FolderItem from "../components/FolderItem.jsx";
 import FlashcardItem from "../components/FlashcardItem.jsx";
@@ -27,23 +27,16 @@ function MyFlashcards() {
   const [editIndex, setEditIndex] = useState(null);
   const [flippedIndex, setFlippedIndex] = useState(null);
   const [error, setError] = useState("");
-  const [sidebarActive, setSidebarActive] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
-  
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedCards, setSelectedCards] = useState(new Set());
+  const [allSelected, setAllSelected] = useState(false);
+
   const fileInputRef = useRef(null);
   const outletContext = useOutletContext();
   const setPageTitle = outletContext?.setPageTitle || (() => {});
-
-  useEffect(() => {
-    const checkSidebar = () => {
-      const sidebar = document.querySelector(".nav-menu");
-      setSidebarActive(sidebar?.classList.contains("active") || false);
-    };
-    checkSidebar();
-    const interval = setInterval(checkSidebar, 100);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     if (user?._id) loadFolders();
@@ -124,10 +117,11 @@ function MyFlashcards() {
   };
 
   const handleBackClick = () => {
-  setSelectedFolder(null);
-  setSelectedFolderIndex(null);
-  setPageTitle("My Flashcards");
-};
+    setSelectedFolder(null);
+    setSelectedFolderIndex(null);
+    setPageTitle("My Flashcards");
+  };
+
   const handleSaveFlashcard = async () => {
     if (!question.trim() || !answer.trim()) {
       setError("Please fill out both fields!");
@@ -200,7 +194,10 @@ function MyFlashcards() {
     setFolders(updated);
     
     if (selectedFolderIndex !== null && updated[selectedFolderIndex]) {
-      setSelectedFolder(updated[selectedFolderIndex]);
+      const newSelectedFolder = updated[selectedFolderIndex];
+      setSelectedFolder(newSelectedFolder);
+      setSelectedCards(new Set());
+      setAllSelected(false);
     }
   };
 
@@ -295,10 +292,92 @@ function MyFlashcards() {
     setFlippedIndex(flippedIndex === index ? null : index);
   };
 
+  const toggleSelectAll = () => {
+    if (!selectedFolder) return;
+    
+    if (allSelected || selectedCards.size === selectedFolder.flashcards.length) {
+      // If all are selected, deselect all
+      setSelectedCards(new Set());
+      setAllSelected(false);
+    } else {
+      // Select all
+      const allIndices = new Set(selectedFolder.flashcards.map((_, index) => index));
+      setSelectedCards(allIndices);
+      setAllSelected(true);
+    }
+  };
+
+  const handleSelectCard = (index) => {
+    const newSelected = new Set(selectedCards);
+    if (newSelected.has(index)) {
+      newSelected.delete(index);
+    } else {
+      newSelected.add(index);
+    }
+    setSelectedCards(newSelected);
+    
+    // Update allSelected state
+    if (newSelected.size === selectedFolder?.flashcards.length) {
+      setAllSelected(true);
+    } else {
+      setAllSelected(false);
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedCards.size === 0) {
+      alert("No cards selected!");
+      return;
+    }
+
+    if (!window.confirm(`Delete ${selectedCards.size} selected flashcard(s)?`)) return;
+
+    try {
+      const sortedIndices = Array.from(selectedCards).sort((a, b) => b - a);
+      
+      for (const cardIndex of sortedIndices) {
+        await fetch(`${API}/flashcards/delete`, {
+          method: "DELETE", 
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            userId: user._id,           
+            folderIndex: selectedFolderIndex, 
+            cardIndex: cardIndex
+          }),
+        });
+      }
+
+      await refreshSelectedFolder();
+      setSelectedCards(new Set());
+      setAllSelected(false);
+      setSelectionMode(false);
+    } catch (err) {
+      console.error(err);
+      setError("Error deleting flashcards");
+    }
+  };
+
+  // Add this useEffect to sync allSelected state
+  useEffect(() => {
+    if (selectedFolder && selectedCards.size === selectedFolder.flashcards.length) {
+      setAllSelected(true);
+    } else {
+      setAllSelected(false);
+    }
+  }, [selectedCards, selectedFolder]);
+
+  const toggleSelectionMode = () => {
+    setSelectionMode(!selectionMode);
+    if (!selectionMode) {
+      setSelectedCards(new Set());
+      setAllSelected(false);
+    }
+  };
+
   const toggleFab = () => setFabOpen(!fabOpen);
 
   return (
-    <div className={`container ${sidebarActive ? "sidebar-active" : ""}`}>
+    <div className="container">
       <input
         type="file"
         ref={fileInputRef}
@@ -357,7 +436,40 @@ function MyFlashcards() {
             onImportClick={handleImportClick}
             onAddClick={handleAddClick}
             onBackClick={handleBackClick}
+            onSelectClick={toggleSelectionMode} 
           />
+
+          {/* Selection Mode Controls */}
+          {selectionMode && (
+            <div className="selection-controls">
+              <div className="selection-actions">
+                <button 
+                  className="selection-btn"
+                  onClick={toggleSelectAll}
+                  title={allSelected ? "Deselect all" : "Select all"}
+                >
+                  {allSelected ? <MdDeselect size={20} /> : <MdSelectAll size={20} />}
+                </button>
+                
+                <button 
+                  className="selection-btn delete-btn"
+                  onClick={handleDeleteSelected}
+                  title="Delete selected"
+                  disabled={selectedCards.size === 0}
+                >
+                  <MdDelete size={20} />  ({selectedCards.size})
+                </button>
+                
+                <button 
+                  className="selection-btn cancel-btn"
+                  onClick={toggleSelectionMode}
+                  title="Cancel selection"
+                >
+                  <RxCrossCircled size={20}/>
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="card-list-container">
             {selectedFolder.flashcards.length === 0 && (
@@ -372,7 +484,9 @@ function MyFlashcards() {
                 isFlipped={flippedIndex === index}
                 onFlip={toggleFlip}
                 onEdit={handleEditFlashcard}
-                onDelete={handleDeleteFlashcard}
+                onSelect={handleSelectCard}
+                isSelected={selectedCards.has(index)}
+                selectionMode={selectionMode}
               />
             ))}
           </div>

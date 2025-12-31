@@ -3,16 +3,14 @@
 .container {
     text-align: center;
     padding: 2rem;
-    min-height: 100vh;
+    min-height:  100vh !important;
     background: none;
     position: relative;
     width: 100%;
+    height:100%;
     transition: transform 0.35s ease;
 }
 
-.container.sidebar-active {
-    transform: translateX(250px);
-}
 
 .folder-view {
     background: none;
@@ -51,4 +49,100 @@
     max-width: 100%;
     box-sizing: border-box;
     transition: transform 0.35s ease;
+}
+
+.selection-controls {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+
+    width: fit-content;
+    max-width: 90%;
+    
+    background: none;
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    border: 1px solid rgba(79, 70, 229, 0.1);
+}
+
+
+.selection-info {
+    font-weight: 600;
+    color: var(--button-bg);
+    font-size: 1rem;
+    min-width: 150px;
+}
+
+.selection-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    background:none;
+}
+
+.selection-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: var(--card-front);
+    color: var(--card-front-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+ 
+}
+
+.selection-btn:hover:not(:disabled) {
+    background: var(--text-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.selection-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.delete-btn:hover:not(:disabled) {
+    background: #dc2626;
+    color: white;
+}
+
+.cancel-btn {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.selection-mode-toggle {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    z-index: 50;
+}
+
+
+
+.selection-mode-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.5);
 }

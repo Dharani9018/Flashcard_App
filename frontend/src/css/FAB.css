@@ -1,4 +1,5 @@
 @import url("../Variables.css");
+
 .fab-wrapper {
     position: fixed;
     bottom: 2rem;
@@ -9,6 +10,7 @@
     gap: 1rem;
     transition: transform 0.35s ease;
     background: none;
+    flex-direction: row-reverse;
 }
 
 .fab-main {
@@ -35,16 +37,19 @@
 
 .fab-menu {
     display: flex;
+    flex-direction: row;
     gap: 0.8rem;
+
+    position: fixed;
+    right: 100px;          /* push menu to the LEFT of main FAB */
+    bottom: 20px;         /* SAME bottom as .fab-main */
+
     opacity: 0;
     pointer-events: none;
     transform: translateX(-20px);
-    transition: all .3s ease;
+    transition: all 0.3s ease;
+    z-index: 30;
     background: none;
-    position: fixed;
-    right: 20px;
-    bottom: 86px;
-    z-index: 40;
 }
 
 .fab-wrapper.open .fab-menu {
@@ -92,7 +97,7 @@
 }
 
 .fab-back {
-  position: fixed; /* Changed to fixed */
+  position: fixed; 
   left: 20px;
   bottom: 20px;
   width: 55px;
@@ -115,8 +120,31 @@
 
 
 @media (max-width: 768px) {
+
+  .fab-main {
+    width: 50px;
+    height: 50px;
+  }
+
+  .fab-menu {
+    flex-direction: column;  
+    right: 20px;             
+    bottom: 90px;            
+    transform: translateY(20px);
+  }
+
+  .fab-wrapper.open .fab-menu {
+    transform: translateY(0);
+  }
+
+  .fab-tooltip {
+    left: auto;
+    right: 110%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .fab-back {
-    left: 20px;
     width: 50px;
     height: 50px;
   }

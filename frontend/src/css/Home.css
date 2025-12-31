@@ -1,7 +1,6 @@
 .home-container {
     height: 90vh;
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -9,97 +8,12 @@
     background: none;
     color: var(--text-primary);
     text-align: center;
-    padding: 20px;
+    padding: 0px;
 }
 
-
-
-.home-container .enhanced-bg {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 1; 
-}
-
-.home-container .home-float {
-    position: absolute;
-    width: 100px;
-    height: 55px;
-    border-radius: 14px;
-    background: var(--card-color);
-    opacity: 0.3; 
-    backdrop-filter: blur(5px);
-    box-shadow: 0 0 10px rgba(255, 200, 255, 0.3);
-    animation: homeFloatAnim linear infinite;
-    z-index: 1;
-}
-
-
-.home-container .home-float.card-3d {
-    
-    perspective: none;
-}
-
-
-.home-container .home-card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: #fff;
-    
-    backface-visibility: visible;
-}
-
-.home-container .home-card-front {
-    background: var(--card-color);
-}
-
-.home-container .home-card-back {
-    background: var(--card-color);
-    
-    transform: none;
-}
-
-
-@keyframes homeFloatAnim {
-    0% {
-        transform: translate(0px, 0px) rotate(0deg);
-    }
-    25% {
-        transform: translate(15px, -15px) rotate(5deg);
-    }
-    50% {
-        transform: translate(-10px, 5px) rotate(-5deg);
-    }
-    75% {
-        transform: translate(12px, 18px) rotate(3deg);
-    }
-    100% {
-        transform: translate(0px, 0px) rotate(0deg);
-    }
-}
-
-
-
-.home-container .home-title,
-.home-container .home-subtitle,
-.home-container .home-buttons {
-    position: relative;
-    z-index: 10; 
-}
-
-
-
-.home-container .home-title {
+.home-title {
     font-family: "Georgia", serif;
-    font-size: 4rem;
+    font-size: 2.5rem;
     font-weight: 900;
     color: #3b1f47;
     text-shadow:
@@ -109,14 +23,13 @@
     transition: 0.3s ease;
 }
 
-.home-container .home-title:hover {
+.home-title:hover {
     transform: translateY(-6px);
     text-shadow:
         0 0 18px rgba(210, 140, 255, 0.55),
         0 0 32px rgba(255, 180, 255, 0.35);
 }
 
-/* Dark mode title glow FIX */
 [data-theme="dark"] .home-title {
     color: #f9e9ff !important;
     text-shadow:
@@ -125,12 +38,11 @@
         0 0 55px rgba(255, 160, 255, 0.4);
 }
 
-
-.home-container .home-subtitle {
-    font-size: 1.3rem;
+.home-subtitle {
+    font-size: 0.9rem;
     color: var(--text-secondary);
     opacity: 0.9;
-    margin-bottom: 35px;
+    margin-top: 0px;
 }
 
 [data-theme="dark"] .home-subtitle {
@@ -139,18 +51,17 @@
     text-shadow: 0 0 10px rgba(200, 160, 255, 0.4);
 }
 
-
-
-.home-container .home-buttons {
+.home-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 18px;
     width: 320px;
     background: none;
+    margin-top: 20px;
 }
 
-.home-container .home-btn {
+.home-btn {
     width: 100%;
     padding: 18px 24px;
     font-size: 1.15rem;
@@ -164,11 +75,10 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.25);
 }
 
-.home-container .home-btn:hover {
+.home-btn:hover {
     transform: translateY(-4px) scale(1.03);
     filter: brightness(1.15);
 }
-
 
 [data-theme="dark"] .home-btn {
     background: linear-gradient(135deg, #0a3d62, #1b73c2);
