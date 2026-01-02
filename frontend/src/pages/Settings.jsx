@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect import
+import React, { useState, useEffect } from "react";
 import "../css/settings.css";
 import { useOutletContext } from "react-router-dom";
 

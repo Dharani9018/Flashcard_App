@@ -439,7 +439,6 @@ function MyFlashcards() {
             onSelectClick={toggleSelectionMode} 
           />
 
-          {/* Selection Mode Controls */}
           {selectionMode && (
             <div className="selection-controls">
               <div className="selection-actions">

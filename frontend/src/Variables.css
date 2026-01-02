@@ -1,5 +1,4 @@
 :root {
-    /* Keep your existing colors... */
     --background: radial-gradient(circle at center, #fbe4e6 0%, #f3d9f4 50%, #f5f0e6 100%);
     --side-bar: linear-gradient(135deg, #f0f4f7 0%, #e9eef2 50%, #d8e2ec 100%);
     --button-bg: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
@@ -14,9 +13,9 @@
     
     --card-back: linear-gradient(135deg, #bba8e3 0%, #9c8ad1 50%, #7d6dbf 100%);
     
-    /* Updated card text colors for better readability */
-    --card-front-text: #2d2d2d; /* Darker gray for better contrast on pink/purple */
-    --card-back-text: #2a1b5f; /* Slightly off-white for better readability */
+   
+    --card-front-text: #2d2d2d; 
+    --card-back-text: #2a1b5f; 
     
     --button-text: #ffffff;
 }

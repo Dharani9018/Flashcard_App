@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import "../css/swipe.css";
 import { useOutletContext } from "react-router-dom";
-
+import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
+import { RxCross2 } from "react-icons/rx";
+import { VscCheck } from "react-icons/vsc";
 const API = "http://localhost:5000/api";
 
 function Swipe() {
@@ -268,13 +270,13 @@ function Swipe() {
 	}
 
 	const currentCard = flashcards[currentIndex];
+	var cards = (flashcards.length>1 || flashcards.length==0) ? "cards" : "card"
 
 	return (
 		<div className="review-container">
 			{!isStarted ? (
 				<div className="start-screen">
-					<h2 className="name">Review Mode</h2>
-					<p className="sentence">You have {flashcards.length} cards to review</p>
+					<p className="sentence">You have {flashcards.length} {cards} to review</p>
 					<button className="start-btn" onClick={startReview}>
 						Start Review
 					</button>
@@ -316,25 +318,25 @@ function Swipe() {
 					</div>
 
 					<div className="review-controls modern-controls">
-						<button className="control-btn" onClick={() => { 
+						<button className="control-btn previous" onClick={() => { 
 							if (currentIndex > 0) setCurrentIndex(i => i - 1); 
-						}}>⬅️ Prev</button>
+						}}>prev </button>
 						
 						<button className="control-btn wrong" onClick={handleWrong}>
-							<span></span> Wrong (J)
+							<span></span> <RxCross2 size={30}/>
 						</button>
 						
 						<button className="control-btn pause" onClick={togglePause}>
-							{isPaused ? "▶ Resume (P)" : "⏸ Pause (P)"}
+							{isPaused ? <VscTriangleRight size="30"/> : "⏸"}
 						</button>
 						
 						<button className="control-btn right" onClick={handleRight}>
-							<span></span> Memorized (L)
+							<span></span> <VscCheck size={30} />
 						</button>
 						
-						<button className="control-btn" onClick={() => { 
+						<button className="control-btn next" onClick={() => { 
 							if (currentIndex < flashcards.length - 1) setCurrentIndex(i => i + 1); 
-						}}>Next ➡️</button>
+						}}>Next </button>
 					</div>
 
 					<div className="review-meta-controls">
@@ -346,7 +348,7 @@ function Swipe() {
 						</button>
 					</div>
 
-					<div className="hint modern-hint">
+					<div className="tip">
 						<span>Tip:</span> Tap card to flip. J = wrong, L = memorized, Space = flip, P = pause.
 					</div>
 				</>

@@ -108,9 +108,9 @@
 }
 
 .question {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--card-front-text);
+  font-size: 1.5rem !important;
+  font-weight: 500;
+  color: var(--card-front-text) !important;
   text-align: center;
   line-height: 1.45;
   margin-bottom: 2rem;
@@ -159,13 +159,7 @@
   transition: 0.2s ease;
 }
 
-p
-{
-    color: var(--text-primary) !important;
-  margin-bottom: 1.8rem !important;
-  font-size: 1.9rem !important;
-  font-weight: 700 !important;
-}
+
 .submit-btn {
   background: #6c3fa7;
   color: white;

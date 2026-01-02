@@ -189,7 +189,12 @@ function Typing() {
 			{!isStarted ? (
 				<div className="start-screen">
 					<h2 className="name">Typing Mode</h2>
-					<p className="sentence">You have {flashcards.length} cards to review</p>
+					<p className="sentence">
+						{flashcards.length === 1 
+							? "You have 1 card to review" 
+							: `You have ${flashcards.length} cards to review`
+						}
+					</p>
 					<button className="start-btn" onClick={startReview}>
 						Start Review
 					</button>
@@ -197,7 +202,12 @@ function Typing() {
 			) : completed ? (
 				<div className="completed-screen">
 					<h2>Review Completed!</h2>
-					<p>You've reviewed all {flashcards.length} cards</p>
+					<p>
+						{flashcards.length === 1
+							? "You've reviewed 1 card"
+							: `You've reviewed all ${flashcards.length} cards`
+						}
+					</p>
 					<div className="completed-buttons">
 						<button className="start-over-btn" onClick={startOver}>
 							Start Over
@@ -207,7 +217,12 @@ function Typing() {
 			) : (
 				<>
 					<div className="typing-card-counter-top">
-						<div className="card-count">Card {currentIndex + 1} of {flashcards.length}</div>
+						<div className="card-count">
+							{flashcards.length === 1
+								? "Card 1 of 1"
+								: `Card ${currentIndex + 1} of ${flashcards.length}`
+							}
+						</div>
 						<div className="typing-timer">Time left: {timeLeft}s</div>
 					</div>
 
@@ -255,7 +270,10 @@ function Typing() {
 									)}
 
 									<button onClick={nextCard} className="back-btn">
-										{currentIndex + 1 < flashcards.length ? "Next →" : "Finish"}
+										{currentIndex + 1 < flashcards.length 
+											? "Next Card →" 
+											: "Finish"
+										}
 									</button>
 								</div>
 							</div>

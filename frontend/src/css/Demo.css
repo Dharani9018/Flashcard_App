@@ -86,15 +86,13 @@ h2 {
 }
 
 .btn-link.primary:hover {
-    background: var(--text-accent);
     box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
-    transform: translateY(-2px);
+    transform: scale(1.05);
 }
 
 .btn-link.secondary:hover {
-    background: var(--text-accent);
     box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
-    transform: translateY(-2px);
+    transform: scale(1.05);
 }
 
 p {

@@ -79,7 +79,7 @@ function App() {
                                     iconcolor={isDark ? "white" : "black"}
                                     themeIcon={isDark ? FaSun : FaMoon}
                                     color1={isDark ? "#fffbc7" : "#283452"}
-                                    color2={isDark ? "#e29cf4ff" : "black"}
+                                    color2={isDark ? "#a5417cff" : "black"}
                                     handleThemeChange={() => setIsDark(!isDark)}
                                     pageTitle={pageTitle}
                                     setPageTitle={setPageTitle}

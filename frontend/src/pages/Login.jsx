@@ -8,7 +8,7 @@ const NUM_CARDS = 25;
 const Login = ({ onLoginSuccess }) => {
     const navigate = useNavigate();
 
-    // State for form
+    
     const [formData, setFormData] = useState({
         email: "",
         password: "",
